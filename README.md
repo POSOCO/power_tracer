@@ -12,6 +12,7 @@ The inputs of a line to the line power tracer are
 4. A function that decides the color of line according to the power flow
 
 5. A function that decides the thickness of the line according to the power flow
+
 ***
 Therefore the line object **_state variables_** or **_instance variables_** are
 
@@ -24,6 +25,7 @@ Therefore the line object **_state variables_** or **_instance variables_** are
 4. Line color function
 
 5. Line thickness function
+
 ***
 The Line Object provides **_getter functions_** that return the following information for plotting
 
@@ -32,6 +34,7 @@ The Line Object provides **_getter functions_** that return the following inform
 2. Line width
 
 3. Line color
+
 ***
 The Line Object provides **_setter functions_** that can configure the following plotting
 
