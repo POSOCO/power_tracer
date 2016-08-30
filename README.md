@@ -1,7 +1,7 @@
 # power_tracer
 Changes the line width according to line power flow
 
-The inputs of a line to the line power tracer are
+###The inputs of a line to the line power tracer are
 
 1. The line end point pixel locations (possibly as a function of length and width of the canvas)
 
@@ -13,19 +13,27 @@ The inputs of a line to the line power tracer are
 
 5. A function that decides the thickness of the line according to the power flow
 
-Therefore the line object **state variables** or **instance variables** are
+###Therefore the line object **state variables** or **instance variables** are
 1. Line end points
+
 2. Line power flow
+
 3. Line emergency flow level values array
+
 4. Line color function
+
 5. Line thickness function
 
-The Line Object provides **getter functions** that return the following information for plotting
+###The Line Object provides **getter functions** that return the following information for plotting
 1. Line end points data
+
 2. Line width
-2. Line color
+
+3. Line color
 
 The Line Object provides **setter functions** that can configure the following plotting
 1. Line end points data
+
 2. Line width determining function
-2. Line color determining function
+
+3. Line color determining function
