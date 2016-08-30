@@ -2,10 +2,15 @@
 Changes the line width according to line power flow
 
 The inputs of a line to the line power tracer are
+
 1. The line end point pixel locations (possibly as a function of length and width of the canvas)
+
 2. Line power flow
+
 3. Line danger flow value
+
 4. A function that decides the color of line according to the power flow
+
 5. A function that decides the thickness of the line according to the power flow
 
 Therefore the line object **state variables** or **instance variables** are
