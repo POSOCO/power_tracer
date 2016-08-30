@@ -5,6 +5,8 @@ function PowerLine(initializer) {
   this.line_power = 0;
   this.line_emergency_flow_levels = [];
   this.line_colors = ["#0000ff", "#00ff00", "#ff0000"];
+  this.line_min_width = 0.1;
+  this.line_max_width = 2;
   this.line_color_function = line_color_function.bind(this);
   this.line_thickness_function = line_thickness_function.bind(this);
 
