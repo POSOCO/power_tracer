@@ -37,7 +37,7 @@ The Line Object provides **_getter functions_** that return the following inform
 3. Line color
 
 ***
-The Line Object provides **_setter functions_** that can configure the following plotting
+The Line Object provides **_setter functions_** that can configure the following for plotting
 
 1. Line end points data
 
