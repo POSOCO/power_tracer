@@ -9,20 +9,22 @@ function PowerLine(opt_options) {
     this.line_min_width = 0.1;
     this.line_max_width = 10;
     this.line_voltage_level = 400;
-    //setters
+    
+    this.setOptions = setOptions.bind(this);
     this.line_color_function = line_color_function.bind(this);
     this.line_thickness_function = line_thickness_function.bind(this);
+    //setters
     this.set_line_end_points = set_line_end_points.bind(this);
     this.set_line_power = set_line_power.bind(this);
+    this.set_line_voltage = set_line_voltage.bind(this);
     //getters
-    this.get_line_voltage = get_line_voltage.bind(this);
     this.get_line_end_points = get_line_end_points.bind(this);
     this.get_line_power = get_line_power.bind(this);
     this.get_line_voltage = get_line_voltage.bind(this);
   
   // set provided options, if any
     if (opt_options) {
-        setOptions(opt_options);
+        this.setOptions(opt_options);
     }
     
     function setOptions(options) {
