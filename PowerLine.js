@@ -9,6 +9,8 @@ function PowerLine(opt_options) {
     this.line_min_width = 0.1;
     this.line_max_width = 10;
     this.line_voltage_level = 400;
+    this.line_color = "6495ED";
+    this.line_thickness = 1;
     
     this.setOptions = setOptions.bind(this);
     this.line_color_function = line_color_function.bind(this);
@@ -17,10 +19,14 @@ function PowerLine(opt_options) {
     this.set_line_end_points = set_line_end_points.bind(this);
     this.set_line_power = set_line_power.bind(this);
     this.set_line_voltage = set_line_voltage.bind(this);
+    this.set_line_color = set_line_color.bind(this);
+    this.set_line_thickness = set_line_thickness.bind(this);
     //getters
     this.get_line_end_points = get_line_end_points.bind(this);
     this.get_line_power = get_line_power.bind(this);
     this.get_line_voltage = get_line_voltage.bind(this);
+    this.get_line_color = get_line_color.bind(this);
+    this.get_line_thickness = get_line_thickness.bind(this);
   
   // set provided options, if any
     if (opt_options) {
@@ -39,6 +45,7 @@ function PowerLine(opt_options) {
         }
     };
 
+    /**Setters**/
     function set_line_end_points(endPoints){
         //TODO check if all values are numbers etc
         this.line_ends = endPoints;
@@ -56,17 +63,34 @@ function PowerLine(opt_options) {
         }
     }
     
-    function get_line_end_points(endPoints){
+    function set_line_color(color){
+        this.line_color = color;
+    }
+    
+    function set_line_thickness(thickness){
+        this.line_thickness = thickness;
+    }
+    
+    /**Getters**/
+    function get_line_end_points(){
         //TODO check if all values are numbers etc
         return this.line_ends;
     }
     
-    function get_line_power(power){
+    function get_line_power(){
         return this.line_power;
     }
     
-    function get_line_voltage(voltage){
+    function get_line_voltage(){
         return this.line_voltage_level;
+    }
+    
+    function get_line_color(){
+        return this.line_color;
+    }
+    
+    function get_line_thickness(){
+        return this.line_thickness;
     }
 
     function line_color_function(power) {
@@ -86,5 +110,4 @@ function PowerLine(opt_options) {
         }
         return thickness;
     };
-
 }
