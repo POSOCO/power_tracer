@@ -8,11 +8,19 @@
 </head>
 <body>
 <div class="wrapper">
-  <h2>Line Testing</h2>
-  <div id="canvasWrapper">
-    <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
-  </div>
-  <div class="push"></div>
+    <h2>Line Testing</h2>
+
+    <div id="canvasWrapper">
+        <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
+    </div>
+    <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
+        <span>Set Line Flow Here</span><br><br>
+        <input id="line_flow_input" style="width: 200px;" type="range" min="10" max="1500" value="400" step="5"
+               onchange="showValue(this.value)"/>
+        <span id="power_input_label">400</span>
+        <br><br>
+    </div>
+    <div class="push"></div>
 </div>
 <div class='footer'
      style='background-color:#217346;color:#EEEEEE;'>
