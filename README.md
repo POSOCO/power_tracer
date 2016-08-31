@@ -59,3 +59,5 @@ The state variables of the plotter object are the following
 3. Color deciding function
 
 4. Thickness deciding function
+
+Watch the demo of this project <a href="https://github.com/POSOCO/power_tracer" target="_blank">here</a>
