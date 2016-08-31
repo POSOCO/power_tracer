@@ -10,10 +10,6 @@ The inputs of a line to the line power tracer are
 
 3. Line danger flow value
 
-4. A function that decides the color of line according to the power flow
-
-5. A function that decides the thickness of the line according to the power flow
-
 ***
 Therefore the line object **_state variables_** or **_instance variables_** are
 
@@ -23,9 +19,9 @@ Therefore the line object **_state variables_** or **_instance variables_** are
 
 3. Line emergency flow level values array
 
-4. Line color function
+4. Line color
 
-5. Line thickness function
+5. Line thickness
 
 ***
 The Line Object provides **_getter functions_** that return the following information for plotting
@@ -36,11 +32,30 @@ The Line Object provides **_getter functions_** that return the following inform
 
 3. Line color
 
+
 ***
 The Line Object provides **_setter functions_** that can configure the following for plotting
 
 1. Line end points data
 
-2. Line width determining function
+2. Line width
 
-3. Line color determining function
+3. Line color
+
+***
+The plotter object does the following
+
+1. Takes a set of lines and plots them
+
+2. Sets the thickness and color of the lines according to the line state variables like power flow
+
+***
+The state variables of the plotter object are the following
+
+1. Set of lines
+
+2. Plotting function
+
+3. Color deciding function
+
+4. Thickness deciding function
