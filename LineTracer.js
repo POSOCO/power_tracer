@@ -5,7 +5,7 @@ function LineTracer(opt_options) {
     this.lines = [];
     this.plotting_canvas = null;
     this.line_colors = ["#6495ED", "#FF69B4", "#FF0000"];
-    this.thickness_per_MW = 0.001; //1 pixel per 50 MW => 10 pixels per 1000 MW
+    this.thickness_per_MW = 0.01; //1 pixels per 100 MW
 
     this.setOptions = setOptions.bind(this);
 
@@ -109,10 +109,13 @@ function LineTracer(opt_options) {
     }
 
     function plot_lines() {
+        console.log("plotting lines started");
         var canvas = this.plotting_canvas;
         //get the canvas context for drawing
         var ctx = canvas.getContext("2d");
         setCanvasParams(canvas);
+        console.log("canvas width is " + canvas.width);
+        console.log("canvas height is " + canvas.height);
         //clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         var lines = this.lines;
@@ -127,7 +130,7 @@ function LineTracer(opt_options) {
             //determine the line end points
             var ends = line.get_line_end_points();
             //plot the line
-            //TODO PLOT THE LINE
+            ctx.beginPath();
             ctx.moveTo(ends[0][0], ends[1][0]);
             for (var k = 1; k < ends[0].length; k++) {
                 ctx.lineTo(ends[0][k], ends[1][k]);
