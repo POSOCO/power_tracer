@@ -2,85 +2,80 @@
 
 function LineTracer(opt_options) {
     //initial values
-    this.lines = [];
-    this.plotting_canvas = null;
-    this.line_colors = ["#6495ED", "#FF69B4", "#FF0000"];
-    this.thickness_per_MW = 0.01; //1 pixels per 100 MW
-
-    this.setOptions = setOptions.bind(this);
-
-    this.line_color_function = line_color_function.bind(this);
-
-    this.line_thickness_function = line_thickness_function.bind(this);
-
-
-    //setters
-    this.set_lines = set_lines.bind(this);
-    this.set_canvas = set_canvas.bind(this);
-    this.set_line_colors = set_line_colors.bind(this);
-    this.set_thickness_per_MW = set_thickness_per_MW.bind(this);
-    //getters
-    this.get_lines = get_lines.bind(this);
-    this.get_canvas = get_canvas.bind(this);
-    this.get_line_colors = get_line_colors.bind(this);
-    this.get_thickness_per_MW = get_thickness_per_MW.bind(this);
-
-    this.plot_lines = plot_lines.bind(this);
+    var lines_g = [];
+    var plotting_canvas_g = null;
+    var line_colors_g = ["#6495ED", "#FF69B4", "#FF0000"];
+    var thickness_per_MW_g = 0.01; //1 pixels per 100 MW
 
     // set provided options, if any
     if (opt_options) {
-        this.setOptions(opt_options);
+        setOptions(opt_options);
     }
 
     function setOptions(options) {
         if (options.lines !== undefined) {
-            this.set_lines(options.lines);
+            set_lines(options.lines);
         }
         if (options.canvas !== undefined) {
-            this.set_canvas(options.canvas);
+            set_canvas(options.canvas);
         }
         if (options.colors !== undefined) {
-            this.set_line_colors(options.colors);
+            set_line_colors(options.colors);
         }
         if (options.thickness_per_mw !== undefined) {
-            this.set_thickness_per_MW(options.thickness_per_mw);
+            set_thickness_per_MW(options.thickness_per_mw);
         }
     }
+	
+	//setters
+    this.set_lines = set_lines;
+    this.set_canvas = set_canvas;
+    this.set_line_colors = set_line_colors;
+    this.set_thickness_per_MW = set_thickness_per_MW;
+	
+    //getters
+    this.get_lines = get_lines;
+    this.get_canvas = get_canvas;
+    this.get_line_colors = get_line_colors;
+    this.get_thickness_per_MW = get_thickness_per_MW;
+	
+	//Public Methods
+	this.plot_lines = plot_lines;
 
     /**Setters**/
-    function set_lines(lines) {
+    function set_lines(linesInput) {
         //TODO check if all values are numbers etc
-        this.lines = lines;
+        lines_g = linesInput;
     }
 
     function set_canvas(canvas) {
-        this.plotting_canvas = canvas;
+        plotting_canvas_g = canvas;
     }
 
     function set_line_colors(colors) {
-        this.line_colors = colors;
+        line_colors_g = colors;
     }
 
     function set_thickness_per_MW(thickness_per_mw) {
-        this.thickness_per_MW = thickness_per_mw;
+        thickness_per_MW_g = thickness_per_mw;
     }
 
     /**Getters**/
     function get_lines() {
         //TODO check if all values are numbers etc
-        return this.lines;
+        return lines_g;
     }
 
     function get_canvas() {
-        return this.plotting_canvas;
+        return plotting_canvas_g;
     }
 
     function get_line_colors(colors) {
-        return this.line_colors;
+        return line_colors_g;
     }
 
     function get_thickness_per_MW() {
-        return this.thickness_per_MW;
+        return thickness_per_MW_g;
     }
 
     function line_color_function(line_power, line_emergency_flow_levels) {
@@ -90,7 +85,7 @@ function LineTracer(opt_options) {
                 level = i;
             }
         }
-        return this.line_colors[level];
+        return line_colors_g[level];
     }
 
     function line_thickness_function(line_power, line_emergency_flow_levels, is_PU) {
@@ -103,14 +98,14 @@ function LineTracer(opt_options) {
         }
         else {
             //thickness **NOT** based on PU flow
-            return line_power * this.thickness_per_MW;
+            return line_power * thickness_per_MW_g;
         }
         return thickness;
     }
 
     function plot_lines() {
         console.log("plotting lines started");
-        var canvas = this.plotting_canvas;
+        var canvas = plotting_canvas_g;
         //get the canvas context for drawing
         var ctx = canvas.getContext("2d");
         setCanvasParams(canvas);
@@ -118,14 +113,14 @@ function LineTracer(opt_options) {
         console.log("canvas height is " + canvas.height);
         //clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        var lines = this.lines;
+        var lines = lines_g;
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             //determine the line thickness
-            var thickness = this.line_thickness_function(line.get_line_power());
+            var thickness = line_thickness_function(line.get_line_power());
             ctx.lineWidth = thickness;
             //determine the line color
-            var color = this.line_color_function(line.get_line_power(), line.get_line_emergency_flow_levels());
+            var color = line_color_function(line.get_line_power(), line.get_line_emergency_flow_levels());
             ctx.strokeStyle = color;
             //determine the line end points
             var ends = line.get_line_end_points();
