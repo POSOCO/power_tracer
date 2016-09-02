@@ -43,7 +43,7 @@ function LineTracer(opt_options) {
             this.set_line_colors(options.colors);
         }
         if (options.thickness_per_mw !== undefined) {
-            this.thickness_per_MW(options.thickness_per_mw);
+            this.set_thickness_per_MW(options.thickness_per_mw);
         }
     }
 
