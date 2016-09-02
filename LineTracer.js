@@ -79,7 +79,7 @@ function LineTracer(opt_options) {
         return this.line_colors;
     }
 
-    function get_thickness_per_MW(thickness_per_mw) {
+    function get_thickness_per_MW() {
         return this.thickness_per_MW;
     }
 
