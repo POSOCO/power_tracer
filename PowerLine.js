@@ -9,21 +9,6 @@ function PowerLine(opt_options) {
     var line_emergency_flow_levels_g = [0, 600];
     var line_voltage_level_g = 400;
 
-    //setters
-    this.set_line_end_points = set_line_end_points;
-    this.set_line_power = set_line_power;
-    this.set_line_color = set_line_color;
-    this.set_line_thickness = set_line_thickness;
-    this.set_line_emergency_flow_levels = set_line_emergency_flow_levels;
-    this.set_line_voltage = set_line_voltage;
-    //getters
-    this.get_line_end_points = get_line_end_points;
-    this.get_line_power = get_line_power;
-    this.get_line_color = get_line_color;
-    this.get_line_thickness = get_line_thickness;
-    this.get_line_emergency_flow_levels = get_line_emergency_flow_levels;
-    this.get_line_voltage = get_line_voltage;
-
     // set provided options, if any
     if (opt_options) {
         setOptions(opt_options);
@@ -43,6 +28,22 @@ function PowerLine(opt_options) {
             set_line_emergency_flow_levels(options.levels);
         }
     }
+
+    //setters
+    this.set_line_end_points = set_line_end_points;
+    this.set_line_power = set_line_power;
+    this.set_line_color = set_line_color;
+    this.set_line_thickness = set_line_thickness;
+    this.set_line_emergency_flow_levels = set_line_emergency_flow_levels;
+    this.set_line_voltage = set_line_voltage;
+
+    //getters
+    this.get_line_end_points = get_line_end_points;
+    this.get_line_power = get_line_power;
+    this.get_line_color = get_line_color;
+    this.get_line_thickness = get_line_thickness;
+    this.get_line_emergency_flow_levels = get_line_emergency_flow_levels;
+    this.get_line_voltage = get_line_voltage;
 
     /**Setters**/
     function set_line_end_points(endPoints) {
