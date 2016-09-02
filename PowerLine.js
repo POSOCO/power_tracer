@@ -2,100 +2,98 @@
 
 function PowerLine(opt_options) {
     //initial values
-    this.line_ends = [];
-    this.line_power = 0;
-    this.line_color = "6495ED";
-    this.line_thickness = 1;
-    this.line_emergency_flow_levels = [0, 600];
-    this.line_voltage_level = 400;
-
-    this.setOptions = setOptions.bind(this);
+    var line_ends_g = [];
+    var line_power_g = 0;
+    var line_color_g = "6495ED";
+    var line_thickness_g = 1;
+    var line_emergency_flow_levels_g = [0, 600];
+    var line_voltage_level_g = 400;
 
     //setters
-    this.set_line_end_points = set_line_end_points.bind(this);
-    this.set_line_power = set_line_power.bind(this);
-    this.set_line_color = set_line_color.bind(this);
-    this.set_line_thickness = set_line_thickness.bind(this);
-    this.set_line_emergency_flow_levels = set_line_emergency_flow_levels.bind(this);
-    this.set_line_voltage = set_line_voltage.bind(this);
+    this.set_line_end_points = set_line_end_points;
+    this.set_line_power = set_line_power;
+    this.set_line_color = set_line_color;
+    this.set_line_thickness = set_line_thickness;
+    this.set_line_emergency_flow_levels = set_line_emergency_flow_levels;
+    this.set_line_voltage = set_line_voltage;
     //getters
-    this.get_line_end_points = get_line_end_points.bind(this);
-    this.get_line_power = get_line_power.bind(this);
-    this.get_line_color = get_line_color.bind(this);
-    this.get_line_thickness = get_line_thickness.bind(this);
-    this.get_line_emergency_flow_levels = get_line_emergency_flow_levels.bind(this);
-    this.get_line_voltage = get_line_voltage.bind(this);
+    this.get_line_end_points = get_line_end_points;
+    this.get_line_power = get_line_power;
+    this.get_line_color = get_line_color;
+    this.get_line_thickness = get_line_thickness;
+    this.get_line_emergency_flow_levels = get_line_emergency_flow_levels;
+    this.get_line_voltage = get_line_voltage;
 
     // set provided options, if any
     if (opt_options) {
-        this.setOptions(opt_options);
+        setOptions(opt_options);
     }
 
     function setOptions(options) {
         if (options.ends !== undefined) {
-            this.set_line_end_points(options.ends);
+            set_line_end_points(options.ends);
         }
         if (options.power !== undefined) {
-            this.set_line_power(options.power);
+            set_line_power(options.power);
         }
         if (options.voltage !== undefined) {
-            this.set_line_voltage(options.voltage);
+            set_line_voltage(options.voltage);
         }
         if (options.levels !== undefined) {
-            this.set_line_emergency_flow_levels(options.levels);
+            set_line_emergency_flow_levels(options.levels);
         }
     }
 
     /**Setters**/
     function set_line_end_points(endPoints) {
-        this.line_ends = endPoints;
+        line_ends_g = endPoints;
     }
 
     function set_line_power(power) {
-        this.line_power = power;
+        line_power_g = power;
     }
 
     function set_line_color(color) {
-        this.line_color = color;
+        line_color_g = color;
     }
 
     function set_line_thickness(thickness) {
-        this.line_thickness = thickness;
+        line_thickness_g = thickness;
     }
 
     function set_line_emergency_flow_levels(levels) {
-        this.line_emergency_flow_levels = levels;
+        line_emergency_flow_levels_g = levels;
     }
 
     function set_line_voltage(voltage) {
         if (!isNaN(voltage)) {
-            this.line_voltage_level = voltage;
+            line_voltage_level_g = voltage;
         }
     }
 
     /**Getters**/
     function get_line_end_points() {
         //TODO check if all values are numbers etc
-        return this.line_ends;
+        return line_ends_g;
     }
 
     function get_line_power() {
-        return this.line_power;
+        return line_power_g;
     }
 
     function get_line_color() {
-        return this.line_color;
+        return line_color_g;
     }
 
     function get_line_thickness() {
-        return this.line_thickness;
+        return line_thickness_g;
     }
 
     function get_line_emergency_flow_levels() {
-        return this.line_emergency_flow_levels;
+        return line_emergency_flow_levels_g;
     }
 
     function get_line_voltage() {
-        return this.line_voltage_level;
+        return line_voltage_level_g;
     }
 }

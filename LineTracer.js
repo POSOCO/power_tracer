@@ -104,26 +104,35 @@ function LineTracer(opt_options) {
     }
 
     function plot_lines() {
-        console.log("plotting lines started");
         var canvas = plotting_canvas_g;
+
         //get the canvas context for drawing
         var ctx = canvas.getContext("2d");
         setCanvasParams(canvas);
-        console.log("canvas width is " + canvas.width);
-        console.log("canvas height is " + canvas.height);
+
+        /*console.log("canvas width is " + canvas.width);
+        console.log("canvas height is " + canvas.height);*/
+
         //clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        //get all the lines
         var lines = lines_g;
         for (var i = 0; i < lines.length; i++) {
+            //fetch a line
             var line = lines[i];
+
             //determine the line thickness
             var thickness = line_thickness_function(line.get_line_power());
             ctx.lineWidth = thickness;
+
             //determine the line color
             var color = line_color_function(line.get_line_power(), line.get_line_emergency_flow_levels());
             ctx.strokeStyle = color;
+
             //determine the line end points
             var ends = line.get_line_end_points();
+
             //plot the line
             ctx.beginPath();
             ctx.moveTo(ends[0][0], ends[1][0]);

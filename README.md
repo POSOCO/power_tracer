@@ -1,14 +1,14 @@
 # power_tracer
 Changes the line width according to line power flow
 
-***
-The inputs of a line to the line power tracer are
+## Power Line
+The inputs of a Power Line in the power tracer are
 
 1. The line end point pixel locations (possibly as a function of length and width of the canvas)
 
 2. Line power flow
 
-3. Line danger flow value
+3. Line emergency flow values
 
 ***
 Therefore the line object **_state variables_** or **_instance variables_** are
@@ -23,26 +23,10 @@ Therefore the line object **_state variables_** or **_instance variables_** are
 
 5. Line thickness
 
-***
-The Line Object provides **_getter functions_** that return the following information for plotting
+The Line Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
 
-1. Line end points data
+##Line Tracer
 
-2. Line width
-
-3. Line color
-
-
-***
-The Line Object provides **_setter functions_** that can configure the following for plotting
-
-1. Line end points data
-
-2. Line width
-
-3. Line color
-
-***
 The plotter object does the following
 
 1. Takes a set of lines and plots them
@@ -60,4 +44,7 @@ The state variables of the plotter object are the following
 
 4. Thickness deciding function
 
+The Line Tracer Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
+
+***
 Watch the demo of this project <a href="https://posoco.github.io/power_tracer/apps/singletest" target="_blank">here</a>
