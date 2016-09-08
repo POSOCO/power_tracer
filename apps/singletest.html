@@ -15,9 +15,10 @@
     </div>
     <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
         <span>Set Line Flow Here</span><br><br>
-        <input id="line_flow_input" style="width: 200px;" type="range" min="10" max="1500" value="900" step="5"
+        <input id="line_flow_input" style="width: 450px;" type="range" min="0" max="2200" value="900" step="2"
                onchange="showValue(this.value)"/>
         <span id="power_input_label">900</span>
+        <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px">Thickness = Power/NominalPower</label>
         <br><br>
     </div>
     <div class="push"></div>
@@ -29,6 +30,8 @@
         target="_blank"
         style="color:#dddddd;">https://github.com/posoco/power_tracer</a>
 </div>
+<script src="../libs/jquery-1.7.min.js"></script>
+<script src="./libs/consoleFunctions.js"></script>
 <script src="../PowerLine.js"></script>
 <script src="../LineTracer.js"></script>
 <script src="./singleTest.js"></script>
