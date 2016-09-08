@@ -1,5 +1,5 @@
 # power_tracer
-Plots the line width according to line power flow
+Plots the line width according to the line power flow
 
 ##WorkFlow
 The work flow of this app is as follows
