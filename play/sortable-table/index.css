@@ -1,0 +1,8 @@
+/*
+  were using Bootstrap and Font Awesome
+  http://bootstrapcdn.com
+*/
+
+body { padding-top:50px; }
+
+[class^="fa-"]:before, [class*=" fa-"]:before{font-family:fontawesome}

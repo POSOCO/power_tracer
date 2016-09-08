@@ -52,5 +52,11 @@ The state variables of the Line Tracer / Plotter object are the following
 
 The Line Tracer Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
 
+##Todos
+
+1. Show direction of power by arrows
+
+2. Show line list table and sort them by the flow value dynamically and implement this by AngularJs
+
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)

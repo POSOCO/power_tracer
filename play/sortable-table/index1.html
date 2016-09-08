@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Sort and Filter</title>
+    <link rel="stylesheet" type="text/css"
+          href="../../libs/css/font-awesome.min.css">
+    <script src="../../libs/angular.min.js"></script>
+    <script src="index1.js"></script>
+</head>
+<body>
+<div class="container" ng-app="sortApp" ng-controller="mainController">
+
+    <div class="alert alert-info">
+        <p>Sort Type: {{ sortType }}</p>
+
+        <p>Sort Reverse: {{ sortReverse }}</p>
+
+        <p>Search Query: {{ searchLine }}</p>
+    </div>
+
+    <form>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Search the Line by name" ng-model="searchLine">
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+
+        <thead>
+        <tr>
+            <td>
+                <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                    Line Name
+                    <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </td>
+            <td>
+                <a href="#" ng-click="sortType = ['nominal_power', 'power']; sortReverse = !sortReverse">
+                    NominalPower
+                    <span ng-show="sortType[0] == 'nominal_power' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType[0] == 'nominal_power' && sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </td>
+            <td>
+                <a href="#" ng-click="sortType = 'power'; sortReverse = !sortReverse">
+                    Power Flow
+                    <span ng-show="sortType == 'power' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'power' && sortReverse" class="fa fa-caret-up"></span>
+                </a>
+            </td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="line in lines | orderBy:sortType:sortReverse | filter:searchLine">
+            <td>{{ line.name }}</td>
+            <td>{{ line.nominal_power }}</td>
+            <td>{{ line.power }}</td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+</body>
+</html>
