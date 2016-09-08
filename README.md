@@ -10,7 +10,10 @@ The work flow of this app is as follows
 
 3. The **tracer can be configured** to have desired refresh rate, plotting algorithm, line thickness per MW, line colors for each of the emergency flow band, modes of plotting like thickness by absolute power flow or thickness by absolute/nominal power flow ratio
 
-4. After everything is configured, the tracer will fetch each line object power data from **_eDNA server_** and 
+4. After everything is configured, the tracer will fetch each of the line object power data from **_eDNA server_** and plot the lines on a canvas
+
+5. Cheers :sparkles: :smile: :sparkles:
+
 
 ## Power Line
 
@@ -50,4 +53,4 @@ The state variables of the Line Tracer / Plotter object are the following
 The Line Tracer Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
 
 ***
-Watch the demo of this project <a href="https://posoco.github.io/power_tracer/apps/singletest" target="_blank">here</a>
+Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)
