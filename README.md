@@ -1,17 +1,20 @@
 # power_tracer
-Changes the line width according to line power flow
+PLots the line width according to line power flow
+
+##WorkFlow
+The work flow of this app is as follows
+
+1. We create required number of **_line objects_** with desired line properties like line end points, line power flow, line nominal flow value, line emergency levels, line voltage level, line conductor type, line color, line thickness, line power eDNA address
+
+2. Then we will create a single **_tracer object_** which will plot all these lines by updating the line flows from the server using the **_eDNA address_** of the line
+
+3. The **tracer can be configured** to have desired refresh rate, plotting algorithm, line thickness per MW, line colors for each of the emergency flow band, modes of plotting like thickness by absolute power flow or thickness by absolute/nominal power flow ratio
+
+4. After everything is configured, the tracer will fetch each line object power data from **_eDNA server_** and 
 
 ## Power Line
-The inputs of a Power Line in the power tracer are
 
-1. The line end point pixel locations (possibly as a function of length and width of the canvas)
-
-2. Line power flow
-
-3. Line emergency flow values
-
-***
-Therefore the line object **_state variables_** or **_instance variables_** are
+The Line Object properties or **_state variables_** or **_instance variables_** are
 
 1. Line end points
 
@@ -27,22 +30,22 @@ The Line Object provides **_setter functions_** and **_getter functions_** that 
 
 ##Line Tracer
 
-The plotter object does the following
+The Line Tracer / Plotter object does the following
 
-1. Takes a set of lines and plots them
+1. Takes a set of lines and fetches the line power flow information from eDNA server using the eDNA address of the line power flow data point
 
-2. Sets the thickness and color of the lines according to the line state variables like power flow
+2. Plots the lines on a HTML5 canvas
+
+3. Sets the thickness and color of the lines according to the line state variables like line power flow, nominal power flow
 
 ***
-The state variables of the plotter object are the following
+The state variables of the Line Tracer / Plotter object are the following
 
-1. Set of lines
+1. Plotting function
 
-2. Plotting function
+2. Color deciding function
 
-3. Color deciding function
-
-4. Thickness deciding function
+3. Thickness deciding function
 
 The Line Tracer Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
 
