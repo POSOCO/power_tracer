@@ -1,10 +1,14 @@
 <!doctype html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>PowerLine Display Test</title>
     <link rel="shortcut icon" type="image/ico"
           href="https://raw.githubusercontent.com/posoco/power_tracer/gh-pages/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="./home.css">
+    <link rel="stylesheet" type="text/css" href="../libs/css/font-awesome.min.css">
+    <script src="../libs/angular.min.js"></script>
+    <script src="../libs/dirPagination.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -18,8 +22,65 @@
         <input id="line_flow_input" style="width: 450px;" type="range" min="0" max="2200" value="900" step="2"
                onchange="showValue(this.value)"/>
         <span id="power_input_label">900</span>
-        <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px">Thickness = Power/NominalPower</label>
+        <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px">Thickness =
+            Power/NominalPower</label>
         <br><br>
+    </div>
+
+    <div class="container" ng-app="lineSortApp" ng-controller="lineSortController" id="lineSortController">
+        <form>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search the Line by name" ng-model="searchLine">
+                    <label style="margin-left: 50px">Lines per Page</label>
+                    <input type="number" min="1" max="1000" class="form-control" ng-model="pageSize">
+                </div>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <td>
+                    <a class = "sort-clicker" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                        Line Name
+                        <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td>
+                    <a class = "sort-clicker" href="#" ng-click="sortType = ['nominal_power', 'power']; sortReverse = !sortReverse">
+                        NominalPower
+                        <span ng-show="sortType[0] == 'nominal_power' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType[0] == 'nominal_power' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td>
+                    <a class = "sort-clicker" href="#" ng-click="sortType = 'power'; sortReverse = !sortReverse">
+                        Power Flow
+                        <span ng-show="sortType == 'power' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'power' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr dir-paginate="line in lines | orderBy:'power':sortReverse | filter:searchLine | itemsPerPage:pageSize">
+                <td>{{ line.name }}</td>
+                <td>{{ line.nominal_power }}</td>
+                <td>{{ line.power }}</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <dir-pagination-controls
+                max-size="5"
+                direction-links="true"
+                boundary-links="true">
+        </dir-pagination-controls>
+
+        {{ lines }}
     </div>
     <div class="push"></div>
 </div>

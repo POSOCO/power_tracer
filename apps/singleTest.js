@@ -11,7 +11,9 @@ document.onreadystatechange = function () {
 };
 
 var line2;
+var linesArray = [];
 var tracer;
+
 function onDomComplete() {
     var lineCanvas = document.getElementById("myCanvas");
     var line = new PowerLine({
@@ -41,33 +43,68 @@ function onDomComplete() {
         "address": "",
         "name": "765KV Line"
     });//(20,20);(110,110)
+    linesArray = [line, line1, line2];
     tracer = new LineTracer({
         "canvas": lineCanvas,
-        "lines": [line, line1, line2],
+        "lines": linesArray,
         "colors": ["#6495ED", "#FF69B4", "#FF0000"],
         "thickness_per_mw": 0.01,
         "thickness_per_unit": 6,
         "thickness_threshold": 15,
         "mode": 0
     });
-    tracer.plot_lines();
+    doPlotting();
 }
 
 function showValue(newVal) {
     document.getElementById("power_input_label").innerHTML = newVal;
-    line2.set_line_power(newVal);
-    tracer.plot_lines();
+    linesArray[2].set_line_power(newVal);
+    doPlotting();
 }
 
 // assign function to onclick property of checkbox
-document.getElementById('isPerUnitMode').onclick = function() {
+document.getElementById('isPerUnitMode').onclick = function () {
     // access properties using this keyword
-    if ( this.checked ) {
+    if (this.checked) {
         // if checked ...
         tracer.set_plot_mode(1);
     } else {
         // if not checked ...
         tracer.set_plot_mode(0);
     }
-    tracer.plot_lines();
+    doPlotting();
 };
+
+function doPlotting() {
+    tracer.plot_lines();
+    angular.element(document.getElementById('lineSortController')).scope().updateLines(linesArray);
+}
+
+angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
+
+    .controller('lineSortController', function ($scope) {
+        $scope.sortType = 'power'; // set the default sort type
+        $scope.sortReverse = true;  // set the default sort order
+        $scope.searchLine = '';     // set the default search/filter term
+        $scope.lines = [{name: '', nominal_power: '', power: ''}];
+
+        $scope.updateLines = function (linesArray) {
+            $scope.lines = [];
+            for (var i = 0; i < linesArray.length; i++) {
+                var line = linesArray[i];
+                $scope.lines.push({
+                    name: line.get_line_name(),
+                    nominal_power: line.get_line_nominal_flow(),
+                    power: line.get_line_power()
+                });
+            }
+            $scope.$apply();
+        };
+
+        //set page size
+        $scope.pageSize = 3;
+    });
+
+$('.sort-clicker').click(function(e) {
+    e.preventDefault();
+});

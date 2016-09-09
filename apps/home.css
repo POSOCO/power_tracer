@@ -35,3 +35,8 @@ html, body{
     padding-top: 1em;
     height: 3em;
 }
+
+.pagination > li {
+    display: inline;
+    margin-right: 10px;
+}

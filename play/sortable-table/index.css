@@ -3,9 +3,11 @@
   http://bootstrapcdn.com
 */
 
-body { padding-top:50px; }
+body {
+    padding-top: 50px;
+}
 
 .pagination > li {
-  display: inline;
-  margin-right: 10px;
+    display: inline;
+    margin-right: 10px;
 }
