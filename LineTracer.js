@@ -60,12 +60,14 @@ function LineTracer(opt_options) {
 
     //Public Methods
     this.plot_lines = plot_lines;
+    this.set_canvas_params = set_canvas_params;
     this.server_fetch = server_fetch;
 
     /**Setters**/
     function set_lines(linesInput) {
         //TODO check if all values are numbers etc
         lines_g = linesInput;
+        setCaretParams();
     }
 
     function push_line(lineInput) {
@@ -75,6 +77,7 @@ function LineTracer(opt_options) {
 
     function set_canvas(canvas) {
         plotting_canvas_g = canvas;
+        set_canvas_params();
     }
 
     function set_line_colors(colors) {
@@ -157,7 +160,6 @@ function LineTracer(opt_options) {
 
         //get the canvas context for drawing
         var ctx = canvas.getContext("2d");
-        setCanvasParams(canvas);
 
         /*console.log("canvas width is " + canvas.width);
          console.log("canvas height is " + canvas.height);*/
@@ -179,7 +181,7 @@ function LineTracer(opt_options) {
             ctx.lineWidth = (Math.abs(thickness) > thicknessThreshold) ? thicknessThreshold : Math.abs(thickness);
 
             //determine the line color
-            var color = line_color_function(line.get_line_power(), line.get_line_emergency_flow_levels());
+            var color = line_color_function(Math.abs(line.get_line_power()), line.get_line_emergency_flow_levels());
             ctx.strokeStyle = color;
 
             //determine the line end points
@@ -195,7 +197,8 @@ function LineTracer(opt_options) {
         }
     }
 
-    function setCanvasParams(canvas) {
+    function set_canvas_params() {
+        var canvas = plotting_canvas_g;
         var ctx = canvas.getContext("2d");
         var xp = getComputedStyle(canvas, null).getPropertyValue('width');
         xp = xp.substring(0, xp.length - 2);
@@ -203,6 +206,42 @@ function LineTracer(opt_options) {
         var yp = getComputedStyle(canvas, null).getPropertyValue('height');
         yp = yp.substring(0, yp.length - 2);
         ctx.canvas.height = yp;
+    }
+
+    function setCaretParams() {
+        for (var i = 0; i < lines_g.length; i++) {
+            var line = lines_g[i];
+            var ends = line.get_line_end_points();
+            var lineSectionsParamsObjects = [];
+            for (var k = 0; k < ends[0].length - 1; k++) {
+                lineSectionsParamsObjects.push(getLineSectionParams(ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]));
+            }
+            lines_g[i].sectionsParams = lineSectionsParamsObjects;
+        }
+    }
+
+    function getLineSectionParams(x1, y1, x2, y2) {
+        if (x2 == x1) {
+            //Infinity slope case to be handled by the tracer as x = x1 and y = min(y1, y2) + l
+            var d12 = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+            var m12 = null;
+            var c12 = null;
+            var oneByRootOnePlusMSquare = null;
+        } else {
+            m12 = (y2 - y1) / (x2 - x1);
+            c12 = y1 - m12 * x1;
+
+            var RootOnePlusMSquare = Math.sqrt(1 + m12 * m12);
+
+            d12 = Math.abs(x2 - x1) * RootOnePlusMSquare;
+            oneByRootOnePlusMSquare = 1 / RootOnePlusMSquare;
+        }
+        return {
+            m: m12,
+            c: c12,
+            d: d12,
+            oneByRootOnePlusMSquare: oneByRootOnePlusMSquare
+        };
     }
 
     function server_fetch(point_address, done) {

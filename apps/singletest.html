@@ -16,10 +16,11 @@
 
     <div id="canvasWrapper">
         <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
+        <canvas id="caretCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
     </div>
     <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
         <span>Set Line Flow Here</span><br><br>
-        <input id="line_flow_input" style="width: 450px;" type="range" min="0" max="2200" value="900" step="2"
+        <input id="line_flow_input" style="width: 550px;" type="range" min="-2000" max="2200" value="900" step="2"
                onchange="showValue(this.value)"/>
         <span id="power_input_label">900</span>
         <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px">Thickness =
@@ -37,7 +38,7 @@
                 </div>
             </div>
         </form>
-
+        <br><br>
         <table>
             <thead>
             <tr>
@@ -66,7 +67,7 @@
             </thead>
 
             <tbody>
-            <tr dir-paginate="line in lines | orderBy:'power':sortReverse | filter:searchLine | itemsPerPage:pageSize">
+            <tr dir-paginate="line in lines | orderBy:sortFunction:sortReverse | filter:searchLine | itemsPerPage:pageSize">
                 <td>{{ line.name }}</td>
                 <td>{{ line.nominal_power }}</td>
                 <td>{{ line.power }}</td>
@@ -79,8 +80,7 @@
                 direction-links="true"
                 boundary-links="true">
         </dir-pagination-controls>
-
-        {{ lines }}
+        <div style="margin-bottom: 50px"></div>
     </div>
     <div class="push"></div>
 </div>

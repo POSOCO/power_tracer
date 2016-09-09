@@ -13,6 +13,8 @@ document.onreadystatechange = function () {
 var line2;
 var linesArray = [];
 var tracer;
+var caretPositionPercentage = 0;
+var caretSize = 4;
 
 function onDomComplete() {
     var lineCanvas = document.getElementById("myCanvas");
@@ -44,6 +46,7 @@ function onDomComplete() {
         "name": "765KV Line"
     });//(20,20);(110,110)
     linesArray = [line, line1, line2];
+    //setCaretParams();
     tracer = new LineTracer({
         "canvas": lineCanvas,
         "lines": linesArray,
@@ -54,6 +57,19 @@ function onDomComplete() {
         "mode": 0
     });
     doPlotting();
+
+    set_canvas_params(document.getElementById("caretCanvas"));
+    window.setInterval(drawLinesCarets, 200);
+}
+
+function set_canvas_params(canvas) {
+    var ctx = canvas.getContext("2d");
+    var xp = getComputedStyle(canvas, null).getPropertyValue('width');
+    xp = xp.substring(0, xp.length - 2);
+    ctx.canvas.width = xp;
+    var yp = getComputedStyle(canvas, null).getPropertyValue('height');
+    yp = yp.substring(0, yp.length - 2);
+    ctx.canvas.height = yp;
 }
 
 function showValue(newVal) {
@@ -77,7 +93,67 @@ document.getElementById('isPerUnitMode').onclick = function () {
 
 function doPlotting() {
     tracer.plot_lines();
+    drawLinesCarets();
     angular.element(document.getElementById('lineSortController')).scope().updateLines(linesArray);
+}
+
+function calculateCaretPosition(percentageOfSection, d, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2) {
+    var l = d * percentageOfSection * 0.01;
+    if (m != null) {
+        var x = (m > 0 ? 1 : -1) * l * oneByRootOnePlusMSquare + x1;
+        var y = m * x + c;
+    } else {
+        //slope = infnity
+        var x = x1;
+        var y = Math.min(y1, y2) + l;
+    }
+    return {x: x, y: y};
+}
+
+function drawLinesCarets() {
+    //increase the caretPositionPercentPosition by 10 and revert back to zero if >100
+    caretPositionPercentage = caretPositionPercentage + 10;
+    if (caretPositionPercentage > 100) {
+        caretPositionPercentage = 0;
+    }
+    var canvas = document.getElementById("caretCanvas");
+
+    //get the canvas context for drawing
+    var ctx = canvas.getContext("2d");
+
+    //clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //get all the lines
+    var lines = tracer.get_lines();
+
+    for (var i = 0; i < lines.length; i++) {
+        //fetch a line
+        var line = lines[i];
+
+        //determine the line power direction
+        var lineDirection = (line.get_line_power() > 0) ? 1 : -1;
+
+        //set caret position according to direction
+        if (lineDirection == 1) {
+            var localCaretPositionPercentage = 100 - caretPositionPercentage;
+        } else {
+            localCaretPositionPercentage = caretPositionPercentage;
+        }
+
+        //determine the line end points
+        var ends = line.get_line_end_points();
+
+        //plot the carets
+        for (var k = 0; k < ends[0].length - 1; k++) {
+            //go to each section
+            var sectionParams = line.sectionsParams[k];
+            var caretPosition = calculateCaretPosition(localCaretPositionPercentage, sectionParams.d, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]);
+            ctx.beginPath();
+            ctx.arc(caretPosition.x, caretPosition.y, caretSize, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
 }
 
 angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
@@ -101,10 +177,14 @@ angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
             $scope.$apply();
         };
 
+        $scope.sortFunction = function (line) {
+            return line.power;
+        };
+
         //set page size
         $scope.pageSize = 3;
     });
 
-$('.sort-clicker').click(function(e) {
+$('.sort-clicker').click(function (e) {
     e.preventDefault();
 });
