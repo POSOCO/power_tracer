@@ -1,4 +1,4 @@
-angular.module('sortApp', [])
+angular.module('sortApp', ['angularUtils.directives.dirPagination'])
 
     .controller('mainController', function ($scope) {
         $scope.sortType = 'power'; // set the default sort type
@@ -12,5 +12,8 @@ angular.module('sortApp', [])
             {name: '3 Line', nominal_power: 200, power: 150},
             {name: '4 Line', nominal_power: 600, power: 550}
         ];
+
+        //set page size
+        $scope.pageSize = 2;
 
     });

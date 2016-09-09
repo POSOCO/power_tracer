@@ -2,9 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Angular Sort and Filter</title>
-    <link rel="stylesheet" type="text/css"
-          href="../../libs/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
     <script src="../../libs/angular.min.js"></script>
+    <script src="../../libs/dirPagination.js"></script>
     <script src="index1.js"></script>
 </head>
 <body>
@@ -21,8 +22,9 @@
     <form>
         <div class="form-group">
             <div class="input-group">
-                <div class="input-group-addon"><i class="fa fa-search"></i></div>
                 <input type="text" class="form-control" placeholder="Search the Line by name" ng-model="searchLine">
+                <label style="margin-left: 50px">Lines per Page</label>
+                <input type="number" min="1" max="1000" class="form-control" ng-model="pageSize">
             </div>
         </div>
     </form>
@@ -56,7 +58,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="line in lines | orderBy:sortType:sortReverse | filter:searchLine">
+        <tr dir-paginate="line in lines | orderBy:sortType:sortReverse | filter:searchLine | itemsPerPage:pageSize">
             <td>{{ line.name }}</td>
             <td>{{ line.nominal_power }}</td>
             <td>{{ line.power }}</td>
@@ -64,6 +66,11 @@
         </tbody>
 
     </table>
+    <dir-pagination-controls
+            max-size="5"
+            direction-links="true"
+            boundary-links="true">
+    </dir-pagination-controls>
 
 </div>
 </body>

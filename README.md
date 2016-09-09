@@ -58,5 +58,7 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 
 2. Show line list table and sort them by the flow value dynamically and implement this by AngularJs
 
+3. Do the table [pagination](http://code.ciphertrick.com/2015/06/01/search-sort-and-pagination-ngrepeat-angularjs/) with each page having 100 rows
+
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)

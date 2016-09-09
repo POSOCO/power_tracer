@@ -5,4 +5,7 @@
 
 body { padding-top:50px; }
 
-[class^="fa-"]:before, [class*=" fa-"]:before{font-family:fontawesome}
+.pagination > li {
+  display: inline;
+  margin-right: 10px;
+}
