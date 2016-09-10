@@ -10,14 +10,22 @@ document.onreadystatechange = function () {
     }
 };
 
-var line2;
 var linesArray = [];
 var tracer;
+var caretCanvas;
+var caretCtx;
 var caretPositionPercentage = 0;
-var caretSize = 4;
+var caretSize = 10;
+var arrowHandler = null;
+var arrowFrameDelay = 100;
 
 function onDomComplete() {
     var lineCanvas = document.getElementById("myCanvas");
+    caretCanvas = document.getElementById("caretCanvas");
+    set_canvas_params(caretCanvas);
+    caretCtx = caretCanvas.getContext("2d");
+    caretCtx.strokeStyle = "#FFFFFF";
+
     var line = new PowerLine({
         "ends": [[10, 100], [10, 100]],
         "power": 350,
@@ -36,7 +44,7 @@ function onDomComplete() {
         "address": "",
         "name": "400KV Line"
     });//(20,20);(110,110)
-    line2 = new PowerLine({
+    var line2 = new PowerLine({
         "ends": [[300, 250, 280], [200, 450, 470]],
         "power": 900,
         "nominal": 1200,
@@ -45,7 +53,16 @@ function onDomComplete() {
         "address": "",
         "name": "765KV Line"
     });//(20,20);(110,110)
-    linesArray = [line, line1, line2];
+    var line3 = new PowerLine({
+        "ends": [[400, 450, 450], [200, 200, 290]],
+        "power": 850,
+        "nominal": 600,
+        "levels": [0, 600, 800],
+        "voltage": 400,
+        "address": "",
+        "name": "400KV Line2"
+    });
+    linesArray = [line, line1, line2, line3];
     //setCaretParams();
     tracer = new LineTracer({
         "canvas": lineCanvas,
@@ -58,8 +75,7 @@ function onDomComplete() {
     });
     doPlotting();
 
-    set_canvas_params(document.getElementById("caretCanvas"));
-    window.setInterval(drawLinesCarets, 200);
+    arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
 }
 
 function set_canvas_params(canvas) {
@@ -91,21 +107,58 @@ document.getElementById('isPerUnitMode').onclick = function () {
     doPlotting();
 };
 
+//Assign function to onclick property of checkbox for arrow animation toggling
+document.getElementById('isArrowAnimation').onclick = function () {
+    window.clearRequestInterval(arrowHandler);
+    // access properties using this keyword
+    if (this.checked) {
+        // if checked ...
+        arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
+
+    } else {
+        // if not checked ...
+        clearCarets();
+    }
+};
+
+//Assign function to onclick property of checkbox for arrow animation toggling
+document.getElementById('arrowSpeedInput').onchange = function () {
+    // access properties using this keyword
+    var newDelay = 1000 / this.value;
+    if (newDelay != arrowFrameDelay) {
+        arrowFrameDelay = newDelay;
+        window.clearRequestInterval(arrowHandler);
+        arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
+    }
+};
+
 function doPlotting() {
     tracer.plot_lines();
     drawLinesCarets();
     angular.element(document.getElementById('lineSortController')).scope().updateLines(linesArray);
 }
 
-function calculateCaretPosition(percentageOfSection, d, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2) {
-    var l = d * percentageOfSection * 0.01;
+function calculateCaretPosition(l, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2) {
+    //var l = d * percentageOfSection * 0.01;
     if (m != null) {
-        var x = (m > 0 ? 1 : -1) * l * oneByRootOnePlusMSquare + x1;
+        if (m != 0) {
+            var x = (m > 0 ? 1 : -1) * l * oneByRootOnePlusMSquare + x1;
+        } else {
+            if (x2 == null) {
+                x = x1 + l;
+            } else {
+                x = Math.min(x1, x2) + l;
+            }
+        }
         var y = m * x + c;
     } else {
         //slope = infnity
-        var x = x1;
-        var y = Math.min(y1, y2) + l;
+        x = x1;
+        if (y2 != null) {
+            y = Math.min(y1, y2) + l;
+        } else {
+            y = y1 + l;
+        }
     }
     return {x: x, y: y};
 }
@@ -116,13 +169,9 @@ function drawLinesCarets() {
     if (caretPositionPercentage > 100) {
         caretPositionPercentage = 0;
     }
-    var canvas = document.getElementById("caretCanvas");
 
-    //get the canvas context for drawing
-    var ctx = canvas.getContext("2d");
-
-    //clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //clear the caretCanvas
+    caretCtx.clearRect(0, 0, caretCanvas.width, caretCanvas.height);
 
     //get all the lines
     var lines = tracer.get_lines();
@@ -135,7 +184,7 @@ function drawLinesCarets() {
         var lineDirection = (line.get_line_power() > 0) ? 1 : -1;
 
         //set caret position according to direction
-        if (lineDirection == 1) {
+        if (lineDirection == -1) {
             var localCaretPositionPercentage = 100 - caretPositionPercentage;
         } else {
             localCaretPositionPercentage = caretPositionPercentage;
@@ -148,12 +197,47 @@ function drawLinesCarets() {
         for (var k = 0; k < ends[0].length - 1; k++) {
             //go to each section
             var sectionParams = line.sectionsParams[k];
-            var caretPosition = calculateCaretPosition(localCaretPositionPercentage, sectionParams.d, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]);
-            ctx.beginPath();
-            ctx.arc(caretPosition.x, caretPosition.y, caretSize, 0, 2 * Math.PI);
-            ctx.fill();
+            var caretTailPosition = calculateCaretPosition(sectionParams.d * localCaretPositionPercentage * 0.01, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]);
+
+            //code to draw a perpendicular arrow at caretTailPosition.x, caretTailPosition.y
+            var caretHeadPosition = calculateCaretPosition(caretSize, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, caretTailPosition.x, caretTailPosition.y, ends[0][k + 1], ends[1][k + 1]);
+            var caretPerpendicularSlope = null;
+            if (sectionParams.m == null) {
+                caretPerpendicularSlope = 0;
+            } else if (sectionParams.m != 0) {
+                caretPerpendicularSlope = -1 / sectionParams.m;
+            }
+            var caretPerpendicularYIntercept = null;
+            if (caretPerpendicularSlope != null) {
+                caretPerpendicularYIntercept = caretTailPosition.y - caretPerpendicularSlope * caretTailPosition.x;
+            }
+            var caretFin1Position = calculateCaretPosition(caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
+            var caretFin2Position = calculateCaretPosition(-caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
+            caretCtx.beginPath();
+            caretCtx.moveTo(caretFin1Position.x, caretFin1Position.y);
+            caretCtx.lineTo(caretHeadPosition.x, caretHeadPosition.y);
+            caretCtx.lineTo(caretFin2Position.x, caretFin2Position.y);
+            caretCtx.closePath();
+            caretCtx.stroke();
+            /**
+             //code to draw a circle/square at caretTailPosition.x, caretTailPosition.y
+             caretCtx.beginPath();
+             //caretCtx.arc(caretTailPosition.x, caretTailPosition.y, caretSize, 0, 2 * Math.PI);
+             caretCtx.rect(caretTailPosition.x - caretSize, caretTailPosition.y - caretSize, caretSize * 2, caretSize * 2);
+             caretCtx.stroke();
+             **/
         }
     }
+}
+
+function clearCarets() {
+    var canvas = document.getElementById("caretCanvas");
+
+    //get the canvas context for drawing
+    var ctx = canvas.getContext("2d");
+
+    //clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])

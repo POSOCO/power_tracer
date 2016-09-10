@@ -1,6 +1,6 @@
 #canvasWrapper {
     position: relative;
-    width: 1300px;
+    width: 99%;
     height: 600px;
     border: 2px solid #999999;
 }
@@ -25,11 +25,12 @@
     pointer-events: none;
 }
 
-html, body{
-    height: 100%;margin: 0;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-.wrapper{
+.wrapper {
     min-height: 100%;
     /* Equal to height of footer */
     /* But also accounting for potential margin-bottom of last child */

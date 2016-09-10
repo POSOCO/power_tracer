@@ -14,7 +14,7 @@
 <div class="wrapper">
     <h2>Line Testing</h2>
 
-    <div id="canvasWrapper">
+    <div id="canvasWrapper" style="background-color: black">
         <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
         <canvas id="caretCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
     </div>
@@ -25,6 +25,10 @@
         <span id="power_input_label">900</span>
         <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px">Thickness =
             Power/NominalPower</label>
+        <label><input type="checkbox" checked name="isArrowAnimation" id="isArrowAnimation" style="margin-left: 20px">Arrows</label>
+        <label style="margin-left: 20px">Arrow Speed</label>
+        <input value="10" name="arrowSpeedInput" id="arrowSpeedInput" style="margin-left: 5px" type="number" min="0.1"
+               max="60">
         <br><br>
     </div>
 
@@ -43,21 +47,22 @@
             <thead>
             <tr>
                 <td>
-                    <a class = "sort-clicker" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                    <a class="sort-clicker" href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
                         Line Name
                         <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </td>
                 <td>
-                    <a class = "sort-clicker" href="#" ng-click="sortType = ['nominal_power', 'power']; sortReverse = !sortReverse">
+                    <a class="sort-clicker" href="#"
+                       ng-click="sortType = ['nominal_power', 'power']; sortReverse = !sortReverse">
                         NominalPower
                         <span ng-show="sortType[0] == 'nominal_power' && !sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="sortType[0] == 'nominal_power' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </td>
                 <td>
-                    <a class = "sort-clicker" href="#" ng-click="sortType = 'power'; sortReverse = !sortReverse">
+                    <a class="sort-clicker" href="#" ng-click="sortType = 'power'; sortReverse = !sortReverse">
                         Power Flow
                         <span ng-show="sortType == 'power' && !sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="sortType == 'power' && sortReverse" class="fa fa-caret-up"></span>
@@ -95,5 +100,6 @@
 <script src="./libs/consoleFunctions.js"></script>
 <script src="../PowerLine.js"></script>
 <script src="../LineTracer.js"></script>
+<script src="../libs/requestAnimFrame.js"></script>
 <script src="./singleTest.js"></script>
 </body>
