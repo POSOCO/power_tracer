@@ -12,20 +12,9 @@ document.onreadystatechange = function () {
 
 var linesArray = [];
 var tracer;
-var caretCanvas;
-var caretCtx;
-var caretPositionPercentage = 0;
-var caretSize = 10;
-var arrowHandler = null;
-var arrowFrameDelay = 100;
 
 function onDomComplete() {
     var lineCanvas = document.getElementById("myCanvas");
-    caretCanvas = document.getElementById("caretCanvas");
-    set_canvas_params(caretCanvas);
-    caretCtx = caretCanvas.getContext("2d");
-    caretCtx.strokeStyle = "#FFFFFF";
-
     var line = new PowerLine({
         "ends": [[10, 100], [10, 100]],
         "power": 350,
@@ -65,32 +54,25 @@ function onDomComplete() {
     linesArray = [line, line1, line2, line3];
     //setCaretParams();
     tracer = new LineTracer({
+        "caret_canvas": caretCanvas,
         "canvas": lineCanvas,
         "lines": linesArray,
         "colors": ["#6495ED", "#FF69B4", "#FF0000"],
         "thickness_per_mw": 0.01,
         "thickness_per_unit": 6,
         "thickness_threshold": 15,
-        "mode": 0
+        "mode": 0,
+        "arrow_delay": 100,
+        "caret_size": 10
+
     });
     doPlotting();
-
-    arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
-}
-
-function set_canvas_params(canvas) {
-    var ctx = canvas.getContext("2d");
-    var xp = getComputedStyle(canvas, null).getPropertyValue('width');
-    xp = xp.substring(0, xp.length - 2);
-    ctx.canvas.width = xp;
-    var yp = getComputedStyle(canvas, null).getPropertyValue('height');
-    yp = yp.substring(0, yp.length - 2);
-    ctx.canvas.height = yp;
+    tracer.plot_arrows();
 }
 
 function showValue(newVal) {
     document.getElementById("power_input_label").innerHTML = newVal;
-    linesArray[2].set_line_power(newVal);
+    tracer.get_lines()[2].set_line_power(newVal);
     doPlotting();
 }
 
@@ -109,15 +91,10 @@ document.getElementById('isPerUnitMode').onclick = function () {
 
 //Assign function to onclick property of checkbox for arrow animation toggling
 document.getElementById('isArrowAnimation').onclick = function () {
-    window.clearRequestInterval(arrowHandler);
+    tracer.stop_and_clear_arrows();
     // access properties using this keyword
     if (this.checked) {
-        // if checked ...
-        arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
-
-    } else {
-        // if not checked ...
-        clearCarets();
+        tracer.plot_arrows();
     }
 };
 
@@ -125,122 +102,15 @@ document.getElementById('isArrowAnimation').onclick = function () {
 document.getElementById('arrowSpeedInput').onchange = function () {
     // access properties using this keyword
     var newDelay = 1000 / this.value;
-    if (newDelay != arrowFrameDelay) {
-        arrowFrameDelay = newDelay;
-        window.clearRequestInterval(arrowHandler);
-        arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
+    if (newDelay != tracer.get_arrow_delay()) {
+        tracer.set_arrow_delay(newDelay);
+        tracer.plot_arrows();
     }
 };
 
 function doPlotting() {
     tracer.plot_lines();
-    drawLinesCarets();
-    angular.element(document.getElementById('lineSortController')).scope().updateLines(linesArray);
-}
-
-function calculateCaretPosition(l, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2) {
-    //var l = d * percentageOfSection * 0.01;
-    if (m != null) {
-        if (m != 0) {
-            var x = (m > 0 ? 1 : -1) * l * oneByRootOnePlusMSquare + x1;
-        } else {
-            if (x2 == null) {
-                x = x1 + l;
-            } else {
-                //x = Math.min(x1, x2) + l;
-                x = x1 + l * (x2 > x1 ? 1 : -1);
-            }
-        }
-        var y = m * x + c;
-    } else {
-        //slope = infnity
-        x = x1;
-        if (y2 != null) {
-            y = y1 + l * (y2 > y1 ? 1 : -1);
-        } else {
-            y = y1 + l;
-        }
-    }
-    return {x: x, y: y};
-}
-
-function drawLinesCarets() {
-    //increase the caretPositionPercentPosition by 10 and revert back to zero if >100
-    caretPositionPercentage = caretPositionPercentage + 10;
-    if (caretPositionPercentage > 100) {
-        caretPositionPercentage = 0;
-    }
-
-    //clear the caretCanvas
-    caretCtx.clearRect(0, 0, caretCanvas.width, caretCanvas.height);
-
-    //get all the lines
-    var lines = tracer.get_lines();
-
-    for (var i = 0; i < lines.length; i++) {
-        //fetch a line
-        var line = lines[i];
-
-        //determine the line power direction
-        var lineDirection = (line.get_line_power() > 0) ? 1 : -1;
-
-        //set caret position according to direction
-        if (lineDirection == -1) {
-            var localCaretPositionPercentage = 100 - caretPositionPercentage;
-        } else {
-            localCaretPositionPercentage = caretPositionPercentage;
-        }
-
-        //determine the line end points
-        var ends = line.get_line_end_points();
-
-        //plot the carets
-        for (var k = 0; k < ends[0].length - 1; k++) {
-            //go to each section
-            var sectionParams = line.sectionsParams[k];
-            var caretTailPosition = calculateCaretPosition(sectionParams.d * localCaretPositionPercentage * 0.01, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]);
-
-            //code to draw a perpendicular arrow at caretTailPosition.x, caretTailPosition.y
-            var caretHeadPosition = calculateCaretPosition((lineDirection > 0 ? 1 : -1) * caretSize, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, caretTailPosition.x, caretTailPosition.y, ends[0][k + 1], ends[1][k + 1]
-                )
-                ;
-            var caretPerpendicularSlope = null;
-            if (sectionParams.m == null) {
-                caretPerpendicularSlope = 0;
-            } else if (sectionParams.m != 0) {
-                caretPerpendicularSlope = -1 / sectionParams.m;
-            }
-            var caretPerpendicularYIntercept = null;
-            if (caretPerpendicularSlope != null) {
-                caretPerpendicularYIntercept = caretTailPosition.y - caretPerpendicularSlope * caretTailPosition.x;
-            }
-            var caretFin1Position = calculateCaretPosition(caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
-            var caretFin2Position = calculateCaretPosition(-caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
-            caretCtx.beginPath();
-            caretCtx.moveTo(caretFin1Position.x, caretFin1Position.y);
-            caretCtx.lineTo(caretHeadPosition.x, caretHeadPosition.y);
-            caretCtx.lineTo(caretFin2Position.x, caretFin2Position.y);
-            caretCtx.closePath();
-            caretCtx.stroke();
-            /**
-             //code to draw a circle/square at caretTailPosition.x, caretTailPosition.y
-             caretCtx.beginPath();
-             //caretCtx.arc(caretTailPosition.x, caretTailPosition.y, caretSize, 0, 2 * Math.PI);
-             caretCtx.rect(caretTailPosition.x - caretSize, caretTailPosition.y - caretSize, caretSize * 2, caretSize * 2);
-             caretCtx.stroke();
-             **/
-        }
-    }
-}
-
-function clearCarets() {
-    var canvas = document.getElementById("caretCanvas");
-
-    //get the canvas context for drawing
-    var ctx = canvas.getContext("2d");
-
-    //clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    angular.element(document.getElementById('lineSortController')).scope().updateLines(tracer.get_lines());
 }
 
 angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
