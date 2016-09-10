@@ -201,7 +201,9 @@ function drawLinesCarets() {
             var caretTailPosition = calculateCaretPosition(sectionParams.d * localCaretPositionPercentage * 0.01, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, ends[0][k], ends[1][k], ends[0][k + 1], ends[1][k + 1]);
 
             //code to draw a perpendicular arrow at caretTailPosition.x, caretTailPosition.y
-            var caretHeadPosition = calculateCaretPosition(caretSize, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, caretTailPosition.x, caretTailPosition.y, ends[0][k + 1], ends[1][k + 1]);
+            var caretHeadPosition = calculateCaretPosition((lineDirection > 0 ? 1 : -1) * caretSize, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, caretTailPosition.x, caretTailPosition.y, ends[0][k + 1], ends[1][k + 1]
+                )
+                ;
             var caretPerpendicularSlope = null;
             if (sectionParams.m == null) {
                 caretPerpendicularSlope = 0;
