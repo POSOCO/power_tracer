@@ -128,7 +128,7 @@ angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
                 $scope.lines.push({
                     name: line.get_line_name(),
                     nominal_power: line.get_line_nominal_flow(),
-                    power: line.get_line_power()
+                    power: Math.abs(line.get_line_power())
                 });
             }
             $scope.$apply();
