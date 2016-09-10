@@ -60,6 +60,10 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 
 3. Crete an option to remove arrow animation
 
+4. Crete an option to change arrow speed
+
+5. Add a arrow position attribute to each line section to facilitate homogenoeous arrow speed in all line sections
+
 
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)
