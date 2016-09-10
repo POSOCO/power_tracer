@@ -54,15 +54,13 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 
 ##Todos
 
-1. Solve the table dynamic sorting problem
+1. Do the table [pagination](http://code.ciphertrick.com/2015/06/01/search-sort-and-pagination-ngrepeat-angularjs/) with each page having 100 rows --- done
 
-2. Do the table [pagination](http://code.ciphertrick.com/2015/06/01/search-sort-and-pagination-ngrepeat-angularjs/) with each page having 100 rows --- done
+2. Crete an option to remove arrow animation --- done
 
-3. Crete an option to remove arrow animation --- done
+3. Crete an option to change arrow speed --- done
 
-4. Crete an option to change arrow speed --- done
-
-5. Add a arrow position attribute to each line section to facilitate homogeneous arrow speed in all line sections
+4. Add a arrow position attribute to each line section to facilitate homogeneous arrow speed in all line sections
 
 
 ***

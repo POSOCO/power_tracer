@@ -365,6 +365,11 @@ function LineTracer(opt_options) {
             //fetch a line
             var line = lines[i];
 
+            //do not draw carets if power == 0
+            if(line.get_line_power() == 0){
+                continue;
+            }
+
             //determine the line power direction
             var lineDirection = (line.get_line_power() > 0) ? 1 : -1;
 

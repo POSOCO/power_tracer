@@ -72,7 +72,7 @@ function onDomComplete() {
 
 function showValue(newVal) {
     document.getElementById("power_input_label").innerHTML = newVal;
-    tracer.get_lines()[2].set_line_power(newVal);
+    tracer.get_lines()[2].set_line_power(Number(newVal));
     doPlotting();
 }
 
@@ -119,7 +119,7 @@ angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
         $scope.sortType = 'power'; // set the default sort type
         $scope.sortReverse = true;  // set the default sort order
         $scope.searchLine = '';     // set the default search/filter term
-        $scope.lines = [{name: '', nominal_power: '', power: ''}];
+        $scope.lines = [];
 
         $scope.updateLines = function (linesArray) {
             $scope.lines = [];
@@ -134,14 +134,25 @@ angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
             $scope.$apply();
         };
 
-        $scope.sortFunction = function (line) {
-            return line.power;
-        };
-
         //set page size
-        $scope.pageSize = 3;
+        $scope.pageSize = 4;
     });
-
+/*
+ //implementing a custom filter
+ .filter('orderObjectBy', function () {
+ return function (items, field, reverse) {
+ var filtered = [];
+ angular.forEach(items, function (item) {
+ filtered.push(item);
+ });
+ filtered.sort(function (a, b) {
+ return (a[field] > b[field] ? 1 : -1);
+ });
+ if (reverse) filtered.reverse();
+ return filtered;
+ };
+ });
+ */
 $('.sort-clicker').click(function (e) {
     e.preventDefault();
 });

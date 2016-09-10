@@ -58,7 +58,7 @@
         </thead>
 
         <tbody>
-        <tr dir-paginate="line in lines | orderBy:sortType:sortReverse | filter:searchLine | itemsPerPage:pageSize">
+        <tr dir-paginate="line in lines | orderObjectBy:sortType:sortReverse | filter:searchLine | itemsPerPage:pageSize">
             <td>{{ line.name }}</td>
             <td>{{ line.nominal_power }}</td>
             <td>{{ line.power }}</td>
