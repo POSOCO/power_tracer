@@ -242,15 +242,26 @@ function LineTracer(opt_options) {
     }
 
     function plot_arrows() {
-        stop_and_clear_arrows();
+        stop_arrows();
         arrowHandler = window.requestInterval(drawLinesCarets, arrowFrameDelay);
     }
 
-    function stop_and_clear_arrows() {
+    function stop_arrows() {
         if (arrowHandler != null) {
             window.clearRequestInterval(arrowHandler);
         }
+    }
+
+    function stop_and_clear_arrows() {
+        stop_arrows();
         clearCarets();
+    }
+
+    function clearCarets() {
+        var canvas = caretCanvas;
+        var ctx = canvas.getContext("2d");
+        //clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function set_canvas_params(canvas) {
@@ -403,17 +414,6 @@ function LineTracer(opt_options) {
             }
         }
     }
-
-    function clearCarets() {
-        var canvas = caretCanvas;
-
-        //get the canvas context for drawing
-        var ctx = canvas.getContext("2d");
-
-        //clear the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
 
     function server_fetch(point_address, done) {
         //fetch from server using the point id
