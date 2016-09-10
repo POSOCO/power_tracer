@@ -54,7 +54,7 @@ function onDomComplete() {
         "name": "765KV Line"
     });//(20,20);(110,110)
     var line3 = new PowerLine({
-        "ends": [[400, 450, 450], [200, 200, 290]],
+        "ends": [[400, 450, 450, 400, 400], [200, 200, 290, 290, 250]],
         "power": 850,
         "nominal": 600,
         "levels": [0, 600, 800],
@@ -147,7 +147,8 @@ function calculateCaretPosition(l, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2
             if (x2 == null) {
                 x = x1 + l;
             } else {
-                x = Math.min(x1, x2) + l;
+                //x = Math.min(x1, x2) + l;
+                x = x1 + l * (x2 > x1 ? 1 : -1);
             }
         }
         var y = m * x + c;
@@ -155,7 +156,7 @@ function calculateCaretPosition(l, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2
         //slope = infnity
         x = x1;
         if (y2 != null) {
-            y = Math.min(y1, y2) + l;
+            y = y1 + l * (y2 > y1 ? 1 : -1);
         } else {
             y = y1 + l;
         }
