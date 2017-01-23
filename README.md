@@ -52,6 +52,11 @@ The state variables of the Line Tracer / Plotter object are the following
 
 The Line Tracer Object provides **_setter functions_** and **_getter functions_** that return the information about the above instance variables
 
+##Important Lines
+1. All 765 kV lines
+2. All HVDC lines
+3. All Inter-regional lines
+
 ##Todos
 
 1. Do the table [pagination](http://code.ciphertrick.com/2015/06/01/search-sort-and-pagination-ngrepeat-angularjs/) with each page having 100 rows --- done
