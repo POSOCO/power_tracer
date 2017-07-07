@@ -65,7 +65,9 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 
 3. Crete an option to change arrow speed --- done
 
-4. Add a arrow position attribute to each line section to facilitate homogeneous arrow speed in all line sections
+4. Arrow cos sin calculate
+
+5. Add a arrow position attribute to each line section to facilitate homogeneous arrow speed in all line sections
 
 
 ***
