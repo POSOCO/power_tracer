@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../libs/css/font-awesome.min.css">
     <script src="../libs/angular.min.js"></script>
     <script src="../libs/dirPagination.js"></script>
-	</head>
+</head>
 <body>
 <div class="wrapper">
     <h2>Line Testing</h2>
@@ -19,42 +19,49 @@
         <canvas id="caretCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
     </div>
     <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
-		<span style="margin-left:36px">Zoom: </span>
-		<button onclick="addZoom(0.5)">-</button>
-		<button onclick="addZoom(-0.5)">+</button>
-        <label><input type="checkbox" name="plot765Input" id="plot765Input" style="margin-left: 20px" checked>765 kV</label>
-        <label><input type="checkbox" name="plot400Input" id="plot400Input" style="margin-left: 20px" checked>400 kV</label>
-        <label><input type="checkbox" name="plot220Input" id="plot220Input" style="margin-left: 20px" checked>220 kV</label><br>
-        <span>Set Line Flow Here</span><br><br>
+        <span style="margin-left:36px">Zoom: </span>
+        <button onclick="addZoom(0.5)">-</button>
+        <button onclick="addZoom(-0.5)">+</button>
+        <label><input type="checkbox" name="plot765Input" id="plot765Input" style="margin-left: 20px" checked>765
+            kV</label>
+        <label><input type="checkbox" name="plot400Input" id="plot400Input" style="margin-left: 20px" checked>400
+            kV</label>
+        <label><input type="checkbox" name="plot220Input" id="plot220Input" style="margin-left: 20px" checked>220
+            kV</label>
+        <label><input type="checkbox" name="plotBorderInput" id="plotBorderInput" style="margin-left: 20px" checked>Borders</label><br><br>
+        <span>Set Line Flow Here</span><br>
         <input id="line_flow_input" style="width: 550px;" type="range" min="-2000" max="2200" value="900" step="2"
                onchange="showValue(this.value)"/>
-        <span id="power_input_label">900</span><br>
-        <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px" checked>Thickness =
+        <span id="power_input_label">900</span><br><br>
+        <label><input type="checkbox" name="isPerUnitMode" id="isPerUnitMode" style="margin-left: 20px" checked>Thickness
+            =
             Power/NominalPower</label>
-		<label style="margin-left: 20px">Thickness/MW</label>
-        <input value="0.01" name="thicknessPerMWInput" id="thicknessPerMWInput" style="margin-left: 5px" type="number" min="0"
-               max="60" step="0.005">
-		<label style="margin-left: 20px">Thickness/PU</label>
-        <input value="3" name="thicknessPerPUInput" id="thicknessPerPUInput" style="margin-left: 5px" type="number" min="0"
+        <label style="margin-left: 20px">Thickness/MW</label>
+        <input value="0.003" name="thicknessPerMWInput" id="thicknessPerMWInput" style="margin-left: 5px" type="number"
+               min="0"
+               max="60" step="0.001">
+        <label style="margin-left: 20px">Thickness/PU</label>
+        <input value="1.5" name="thicknessPerPUInput" id="thicknessPerPUInput" style="margin-left: 5px" type="number"
+               min="0"
                max="60" step="0.01">
-		<br><br>
+        <br><br>
 
         <label><input type="checkbox" checked name="isArrowAnimation" id="isArrowAnimation" style="margin-left: 20px">Arrows</label>
         <label style="margin-left: 20px">Arrow Shape</label>
-		<select id="caretModeSelectInput" onchange="changeCaretMode(this)">
-		  <option value="arrow">Arrows</option>
-		  <option value="circle" selected>Circles</option>
-		  <option value="rect">Rectangles</option>
-		</select>
-		<label style="margin-left: 20px">Arrow Style</label>
-		<select id="caretFillInput" onchange="changeCaretFill(this)">
-		  <option value="arc">Hollow</option>
-		  <option value="fill" selected>Fill</option>
-		</select>
-		<label style="margin-left: 20px">Arrow Size</label>
+        <select id="caretModeSelectInput" onchange="changeCaretMode(this)">
+            <option value="arrow">Arrows</option>
+            <option value="circle" selected>Circles</option>
+            <option value="rect">Rectangles</option>
+        </select>
+        <label style="margin-left: 20px">Arrow Style</label>
+        <select id="caretFillInput" onchange="changeCaretFill(this)">
+            <option value="arc">Hollow</option>
+            <option value="fill" selected>Fill</option>
+        </select>
+        <label style="margin-left: 20px">Arrow Size</label>
         <input value="2" name="arrowSizeInput" id="arrowSizeInput" style="margin-left: 5px" type="number" min="0"
                max="60" step="0.5">
-		<label style="margin-left: 20px">Arrow Speed</label>
+        <label style="margin-left: 20px">Arrow Speed</label>
         <input value="10" name="arrowSpeedInput" id="arrowSpeedInput" style="margin-left: 5px" type="number" min="0"
                max="60" step="1">
         <br><br>

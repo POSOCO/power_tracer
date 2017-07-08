@@ -47,6 +47,7 @@ function getLinesFromDDLObj(ddlObj) {
     var layers765 = ["765KV"];
     var layers400 = ["400KV"];
     var layers220 = [];
+    var layersBorder = ["REGIONAL_BORDER"];
     for (var layerIter = 0; layerIter < ddlObj.layers.length; layerIter++) {
         // Find if layer is 765 KV
         var layer = ddlObj.layers[layerIter];
@@ -61,9 +62,14 @@ function getLinesFromDDLObj(ddlObj) {
             line_voltage = 400;
             line_alert_levels = [0, 600, 800];
             line_nominal_power = 600;
-        }
-        if (line_voltage == null) {
-            continue;
+        } else if (layers220.indexOf(layer.name) != -1) {
+            line_voltage = 220;
+            line_alert_levels = [0, 200, 400];
+            line_nominal_power = 200;
+        } else if (layersBorder.indexOf(layer.name) != -1) {
+            line_voltage = null;
+            line_alert_levels = [];
+            line_nominal_power = null;
         }
         // var layerLines = layer.polyLines;
         for (var lineIter = 0; lineIter < layer.polyLines.length; lineIter++) {
@@ -83,7 +89,7 @@ function getLinesFromDDLObj(ddlObj) {
             }
             linesArray.push(new PowerLine({
                 "ends": ends,
-                "power": line_nominal_power * (0.5 + Math.random()),
+                "power": ((line_voltage != null) ? (line_nominal_power * (0.5 + Math.random())) : null),
                 "nominal": line_nominal_power,
                 "levels": line_alert_levels,
                 "voltage": line_voltage,
@@ -152,11 +158,12 @@ function onDomComplete() {
         "thickness_per_unit": 6,
         "thickness_threshold": 15,
         "mode": 0,
-        "plot_only": [765, 400]
+        "plot_only": [765, 400, "border"]
     });
     get("plot765Input").onclick();
     get("plot400Input").onclick();
     get("plot220Input").onclick();
+    get("plotBorderInput").onclick();
     get("arrowSpeedInput").onchange();
     get("arrowSizeInput").onchange();
     get("caretModeSelectInput").onchange();
@@ -219,6 +226,12 @@ document.getElementById('plot220Input').onclick = function () {
 };
 
 //Assign function to onclick property of checkbox for arrow animation toggling
+document.getElementById('plotBorderInput').onclick = function () {
+    tracer.set_plot_border(this.checked);
+    doPlotting();
+};
+
+//Assign function to onclick property of checkbox for arrow animation toggling
 document.getElementById('arrowSpeedInput').onchange = function () {
     // access properties using this keyword
     var newDelay = 1000 / this.value;
@@ -240,14 +253,14 @@ document.getElementById('arrowSizeInput').onchange = function () {
 document.getElementById('thicknessPerMWInput').onchange = function () {
     // access properties using this keyword
     tracer.set_thickness_per_MW(this.value);
-    tracer.plot_arrows();
+    doPlotting();
 };
 
 //Assign function to onclick property of checkbox for arrow size change
 document.getElementById('thicknessPerPUInput').onchange = function () {
     // access properties using this keyword
     tracer.set_thickness_per_unit(this.value);
-    tracer.plot_arrows();
+    doPlotting();
 };
 
 function doPlotting() {

@@ -5,6 +5,7 @@ function LineTracer(opt_options) {
     var lines_g = [];
     var plotting_canvas_g = null;
     var line_colors_g = ["#6495ED", "#FF69B4", "#FF0000"];
+    var border_color_g = "#AAAAAA";
     var thickness_per_MW_g = 0.01; //1 pixels per 100 MW
     var thickness_per_unit_g = 6; //6 pixels per nominal MW
     var thickness_threshold_g = 15; //max line width is 15 pixels
@@ -12,6 +13,7 @@ function LineTracer(opt_options) {
     var plot_765 = false;
     var plot_400 = false;
     var plot_220 = false;
+    var plot_border = false;
     var xOffset_ = 0;
     var yOffset_ = 0;
     var scale_ = 5;
@@ -78,6 +80,9 @@ function LineTracer(opt_options) {
             if (options.plot_only.indexOf(220) != -1) {
                 set_plot_220(true);
             }
+            if (options.plot_only.indexOf("border") != -1) {
+                set_plot_border(true);
+            }
         }
     }
 
@@ -93,6 +98,7 @@ function LineTracer(opt_options) {
     this.set_plot_765 = set_plot_765;
     this.set_plot_400 = set_plot_400;
     this.set_plot_220 = set_plot_220;
+    this.set_plot_border = set_plot_border;
     this.set_arrow_delay = set_arrow_delay;
     this.set_caret_size = set_caret_size;
     this.set_caret_mode = set_caret_mode;
@@ -113,6 +119,7 @@ function LineTracer(opt_options) {
     this.get_plot_765 = get_plot_765;
     this.get_plot_400 = get_plot_400;
     this.get_plot_220 = get_plot_220;
+    this.get_plot_border = get_plot_border;
     this.get_arrow_delay = get_arrow_delay;
     this.get_caret_size = get_caret_size;
     this.get_caret_mode = get_caret_mode;
@@ -186,6 +193,10 @@ function LineTracer(opt_options) {
         plot_220 = bool;
     }
 
+    function set_plot_border(bool) {
+        plot_border = bool;
+    }
+
     function set_arrow_delay(delay) {
         arrowFrameDelay = delay;
     }
@@ -256,6 +267,10 @@ function LineTracer(opt_options) {
         return plot_220;
     }
 
+    function get_plot_border() {
+        return plot_border;
+    }
+
     function get_arrow_delay() {
         return arrowFrameDelay;
     }
@@ -285,6 +300,9 @@ function LineTracer(opt_options) {
     }
 
     function line_color_function(line_power, line_emergency_flow_levels) {
+        if (line_power == null) {
+            return border_color_g;
+        }
         var level = 0;
         for (var i = 0; i < line_emergency_flow_levels.length; i++) {
             if (line_power >= line_emergency_flow_levels[i]) {
@@ -296,6 +314,9 @@ function LineTracer(opt_options) {
 
     function line_thickness_function(line_power, nominal_power, is_PU) {
         var thickness = 1;
+        if (line_power == null) {
+            return thickness;
+        }
         if (is_PU) {
             //thickness based on PU flow
             if (nominal_power > 0) {
@@ -336,6 +357,9 @@ function LineTracer(opt_options) {
             if (line.get_line_voltage() == 220 && plot_220 == false) {
                 continue;
             }
+            if (line.get_line_voltage() == null && plot_border == false) {
+                continue;
+            }
 
             //determine the line thickness and line power direction
             //here we are accommodating the line plotter mode
@@ -345,8 +369,8 @@ function LineTracer(opt_options) {
             ctx.lineWidth = (Math.abs(thickness) > thicknessThreshold) ? thicknessThreshold : Math.abs(thickness);
 
             //determine the line color
-            var color = line_color_function(Math.abs(line.get_line_power()), line.get_line_emergency_flow_levels());
-            ctx.strokeStyle = color;
+            var lineColor = line_color_function(((line.get_line_power() != null) ? Math.abs(line.get_line_power()) : null), line.get_line_emergency_flow_levels());
+            ctx.strokeStyle = lineColor;
 
             //determine the line end points
             var ends = line.get_line_end_points();
@@ -472,7 +496,7 @@ function LineTracer(opt_options) {
 
     function drawLinesCarets() {
         //increase the caretPositionPercentPosition by 10 and revert back to zero if >100
-        caretPositionPercentage = caretPositionPercentage + 2;
+        caretPositionPercentage = caretPositionPercentage + 4;
         if (caretPositionPercentage > 100) {
             caretPositionPercentage = 0;
         }
@@ -486,6 +510,9 @@ function LineTracer(opt_options) {
             //fetch a line
             var line = lines[i];
 
+            if (line.get_line_voltage() == null) {
+                continue;
+            }
             if (line.get_line_voltage() == 765 && plot_765 == false) {
                 continue;
             }

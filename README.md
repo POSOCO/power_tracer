@@ -69,6 +69,8 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 
 5. Add a arrow position attribute to each line section to facilitate homogeneous arrow speed in all line sections
 
+6. Create option to change color scheme according to voltage levels, severity levels, homogeneous color
+
 
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)
