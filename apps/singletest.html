@@ -21,7 +21,10 @@
     <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
 		<span style="margin-left:36px">Zoom: </span>
 		<button onclick="addZoom(0.5)">-</button>
-		<button onclick="addZoom(-0.5)">+</button><br>
+		<button onclick="addZoom(-0.5)">+</button>
+        <label><input type="checkbox" name="plot765Input" id="plot765Input" style="margin-left: 20px" checked>765 kV</label>
+        <label><input type="checkbox" name="plot400Input" id="plot400Input" style="margin-left: 20px" checked>400 kV</label>
+        <label><input type="checkbox" name="plot220Input" id="plot220Input" style="margin-left: 20px" checked>220 kV</label><br>
         <span>Set Line Flow Here</span><br><br>
         <input id="line_flow_input" style="width: 550px;" type="range" min="-2000" max="2200" value="900" step="2"
                onchange="showValue(this.value)"/>
@@ -35,7 +38,7 @@
         <input value="3" name="thicknessPerPUInput" id="thicknessPerPUInput" style="margin-left: 5px" type="number" min="0"
                max="60" step="0.01">
 		<br><br>
-		
+
         <label><input type="checkbox" checked name="isArrowAnimation" id="isArrowAnimation" style="margin-left: 20px">Arrows</label>
         <label style="margin-left: 20px">Arrow Shape</label>
 		<select id="caretModeSelectInput" onchange="changeCaretMode(this)">
