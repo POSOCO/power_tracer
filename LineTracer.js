@@ -5,7 +5,9 @@ function LineTracer(opt_options) {
     var lines_g = [];
     var plotting_canvas_g = null;
     var line_colors_g = ["#6495ED", "#FF69B4", "#FF0000"];
+    var line_voltage_colors_g = {765: "#FFFF00", 400: "#FF0000", 220: "#00FF00", 132: "#0000FF"};
     var border_color_g = "#AAAAAA";
+    var line_plain_color_g = "#DDDDDD";
     var thickness_per_MW_g = 0.01; //1 pixels per 100 MW
     var thickness_per_unit_g = 6; //6 pixels per nominal MW
     var thickness_threshold_g = 15; //max line width is 15 pixels
@@ -14,6 +16,7 @@ function LineTracer(opt_options) {
     var plot_400 = false;
     var plot_220 = false;
     var plot_border = false;
+    var line_color_mode = "severity";
     var xOffset_ = 0;
     var yOffset_ = 0;
     var scale_ = 5;
@@ -70,6 +73,9 @@ function LineTracer(opt_options) {
         if (options.caret_fill != undefined) {
             set_caret_mode(options.caret_fill);
         }
+        if (options.line_color_mode != undefined) {
+            set_line_color_mode(options.line_color_mode);
+        }
         if (options.plot_only != undefined) {
             if (options.plot_only.indexOf(765) != -1) {
                 set_plot_765(true);
@@ -102,6 +108,7 @@ function LineTracer(opt_options) {
     this.set_arrow_delay = set_arrow_delay;
     this.set_caret_size = set_caret_size;
     this.set_caret_mode = set_caret_mode;
+    this.set_line_color_mode = set_line_color_mode;
     this.set_caret_fill = set_caret_fill;
     this.set_xOffset = set_xOffset;
     this.set_yOffset = set_yOffset;
@@ -123,6 +130,7 @@ function LineTracer(opt_options) {
     this.get_arrow_delay = get_arrow_delay;
     this.get_caret_size = get_caret_size;
     this.get_caret_mode = get_caret_mode;
+    this.get_line_color_mode = get_line_color_mode;
     this.get_caret_fill = get_caret_fill;
     this.get_xOffset = get_xOffset;
     this.get_yOffset = get_yOffset;
@@ -209,6 +217,10 @@ function LineTracer(opt_options) {
         caret_mode_ = mode;
     }
 
+    function set_line_color_mode(mode) {
+        line_color_mode = mode;
+    }
+
     function set_caret_fill(mode) {
         caret_fill_ = mode;
     }
@@ -283,6 +295,10 @@ function LineTracer(opt_options) {
         return caret_mode_;
     }
 
+    function get_line_color_mode() {
+        return line_color_mode;
+    }
+
     function get_caret_fill() {
         return caret_fill_;
     }
@@ -299,17 +315,25 @@ function LineTracer(opt_options) {
         return scale_;
     }
 
-    function line_color_function(line_power, line_emergency_flow_levels) {
+    function line_color_function(line_power, line_emergency_flow_levels, line_voltage) {
         if (line_power == null) {
             return border_color_g;
         }
-        var level = 0;
-        for (var i = 0; i < line_emergency_flow_levels.length; i++) {
-            if (line_power >= line_emergency_flow_levels[i]) {
-                level = i;
+        if (line_color_mode == "severity") {
+            var level = 0;
+            for (var i = 0; i < line_emergency_flow_levels.length; i++) {
+                if (line_power >= line_emergency_flow_levels[i]) {
+                    level = i;
+                }
             }
+            return line_colors_g[level];
+        } else if (line_color_mode == "plain") {
+            return line_plain_color_g;
+        } else if (line_color_mode == "voltage") {
+            var color = line_voltage_colors_g[line_voltage];
+            return (color == undefined ? line_plain_color_g : color);
         }
-        return line_colors_g[level];
+        return border_color_g;
     }
 
     function line_thickness_function(line_power, nominal_power, is_PU) {
@@ -369,7 +393,7 @@ function LineTracer(opt_options) {
             ctx.lineWidth = (Math.abs(thickness) > thicknessThreshold) ? thicknessThreshold : Math.abs(thickness);
 
             //determine the line color
-            var lineColor = line_color_function(((line.get_line_power() != null) ? Math.abs(line.get_line_power()) : null), line.get_line_emergency_flow_levels());
+            var lineColor = line_color_function(((line.get_line_power() != null) ? Math.abs(line.get_line_power()) : null), line.get_line_emergency_flow_levels(), line.get_line_voltage());
             ctx.strokeStyle = lineColor;
 
             //determine the line end points
@@ -435,6 +459,9 @@ function LineTracer(opt_options) {
     function setCaretParams() {
         for (var i = 0; i < lines_g.length; i++) {
             var line = lines_g[i];
+            if (line.get_line_voltage() == null) {
+                continue;
+            }
             var ends = line.get_line_end_points();
             var lineSectionsParamsObjects = [];
             for (var k = 0; k < ends[0].length - 1; k++) {
@@ -445,52 +472,23 @@ function LineTracer(opt_options) {
     }
 
     function getLineSectionParams(x1, y1, x2, y2) {
-        if (x2 == x1) {
-            //Infinity slope case to be handled by the tracer as x = x1 and y = min(y1, y2) + l
-            var d12 = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-            var m12 = null;
-            var c12 = null;
-            var oneByRootOnePlusMSquare = null;
-        } else {
-            m12 = (y2 - y1) / (x2 - x1);
-            c12 = y1 - m12 * x1;
-
-            var RootOnePlusMSquare = Math.sqrt(1 + m12 * m12);
-
-            d12 = Math.abs(x2 - x1) * RootOnePlusMSquare;
-            oneByRootOnePlusMSquare = 1 / RootOnePlusMSquare;
-        }
+        // return cos theta and sin theta and line length
+        var sinTheta = null;
+        var cosTheta = null;
+        var d12 = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+        sinTheta = (y2 - y1) / d12;
+        cosTheta = (x2 - x1) / d12;
         return {
-            m: m12,
-            c: c12,
             d: d12,
-            oneByRootOnePlusMSquare: oneByRootOnePlusMSquare
+            sin: sinTheta,
+            cos: cosTheta
         };
     }
 
-    function calculateCaretPosition(l, m, oneByRootOnePlusMSquare, c, x1, y1, x2, y2) {
+    function calculateNextCaretPosition(l, x1, y1, sinTheta, cosTheta) {
         //var l = d * percentageOfSection * 0.01;
-        if (m != null) {
-            if (m != 0) {
-                var x = (m > 0 ? 1 : -1) * l * oneByRootOnePlusMSquare + x1;
-            } else {
-                if (x2 == null) {
-                    x = x1 + l;
-                } else {
-                    //x = Math.min(x1, x2) + l;
-                    x = x1 + l * (x2 > x1 ? 1 : -1);
-                }
-            }
-            var y = m * x + c;
-        } else {
-            //slope = infnity
-            x = x1;
-            if (y2 != null) {
-                y = y1 + l * (y2 > y1 ? 1 : -1);
-            } else {
-                y = y1 + l;
-            }
-        }
+        var x = x1 + l * cosTheta;
+        var y = y1 + l * sinTheta;
         return {x: x, y: y};
     }
 
@@ -544,22 +542,12 @@ function LineTracer(opt_options) {
             for (var k = 0; k < ends[0].length - 1; k++) {
                 //go to each section
                 var sectionParams = line.sectionsParams[k];
-                var caretTailPosition = calculateCaretPosition(sectionParams.d * localCaretPositionPercentage * 0.01, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, (ends[0][k] + xOffset_) / scale_, (ends[1][k] + yOffset_) / scale_, (ends[0][k + 1] + xOffset_) / scale_, (ends[1][k + 1] + yOffset_) / scale_);
+                var caretTailPosition = calculateNextCaretPosition(sectionParams.d * localCaretPositionPercentage * 0.01, (ends[0][k] + xOffset_) / scale_, (ends[1][k] + yOffset_) / scale_, sectionParams.sin, sectionParams.cos);
                 if (caret_mode_ == "arrow") {
                     //code to draw a perpendicular arrow at caretTailPosition.x, caretTailPosition.y
-                    var caretHeadPosition = calculateCaretPosition((lineDirection > 0 ? 1 : -1) * caretSize, sectionParams.m, sectionParams.oneByRootOnePlusMSquare, sectionParams.c, caretTailPosition.x, caretTailPosition.y, (ends[0][k + 1] + xOffset_) / scale_, (ends[1][k + 1] + yOffset_) / scale_);
-                    var caretPerpendicularSlope = null;
-                    if (sectionParams.m == null) {
-                        caretPerpendicularSlope = 0;
-                    } else if (sectionParams.m != 0) {
-                        caretPerpendicularSlope = -1 / sectionParams.m;
-                    }
-                    var caretPerpendicularYIntercept = null;
-                    if (caretPerpendicularSlope != null) {
-                        caretPerpendicularYIntercept = caretTailPosition.y - caretPerpendicularSlope * caretTailPosition.x;
-                    }
-                    var caretFin1Position = calculateCaretPosition(caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
-                    var caretFin2Position = calculateCaretPosition(-caretSize, caretPerpendicularSlope, Math.abs(sectionParams.m) * sectionParams.oneByRootOnePlusMSquare, caretPerpendicularYIntercept, caretTailPosition.x, caretTailPosition.y);
+                    var caretHeadPosition = calculateNextCaretPosition((lineDirection > 0 ? 1 : -1) * caretSize * 2, caretTailPosition.x, caretTailPosition.y, sectionParams.sin, sectionParams.cos);
+                    var caretFin1Position = calculateNextCaretPosition(caretSize * 2, caretTailPosition.x, caretTailPosition.y, sectionParams.cos, -sectionParams.sin);
+                    var caretFin2Position = calculateNextCaretPosition(-caretSize * 2, caretTailPosition.x, caretTailPosition.y, sectionParams.cos, -sectionParams.sin);
                     caretCtx.beginPath();
                     caretCtx.moveTo(caretFin1Position.x, caretFin1Position.y);
                     caretCtx.lineTo(caretHeadPosition.x, caretHeadPosition.y);

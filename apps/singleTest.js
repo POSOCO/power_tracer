@@ -46,7 +46,7 @@ function getLinesFromDDLObj(ddlObj) {
     var linesArray = [];
     var layers765 = ["765KV"];
     var layers400 = ["400KV"];
-    var layers220 = [];
+    var layers220 = ["220_NEW", "220_LINES"];
     var layersBorder = ["REGIONAL_BORDER"];
     for (var layerIter = 0; layerIter < ddlObj.layers.length; layerIter++) {
         // Find if layer is 765 KV
@@ -70,6 +70,8 @@ function getLinesFromDDLObj(ddlObj) {
             line_voltage = null;
             line_alert_levels = [];
             line_nominal_power = null;
+        } else {
+            continue;
         }
         // var layerLines = layer.polyLines;
         for (var lineIter = 0; lineIter < layer.polyLines.length; lineIter++) {
@@ -112,43 +114,7 @@ function onDomComplete() {
         return document.getElementById(idStr).value;
     };
     var lineCanvas = document.getElementById("myCanvas");
-    var line = new PowerLine({
-        "ends": [[10, 100], [10, 100]],
-        "power": 350,
-        "nominal": 200,
-        "levels": [0, 200, 400],
-        "voltage": 220,
-        "address": "",
-        "name": "220KV Line"
-    }); //(10,10);(100,100)
-    var line1 = new PowerLine({
-        "ends": [[200, 250], [200, 250]],
-        "power": 50,
-        "nominal": 600,
-        "levels": [0, 600, 800],
-        "voltage": 400,
-        "address": "",
-        "name": "400KV Line"
-    });//(20,20);(110,110)
-    var line2 = new PowerLine({
-        "ends": [[300, 250, 280], [200, 450, 470]],
-        "power": 900,
-        "nominal": 1200,
-        "levels": [0, 1200, 2000],
-        "voltage": 765,
-        "address": "",
-        "name": "765KV Line"
-    });//(20,20);(110,110)
-    var line3 = new PowerLine({
-        "ends": [[400, 450, 450, 400, 400], [200, 200, 290, 290, 250]],
-        "power": 850,
-        "nominal": 600,
-        "levels": [0, 600, 800],
-        "voltage": 400,
-        "address": "",
-        "name": "400KV Line2"
-    });
-    linesArray = [line, line1, line2, line3];
+    linesArray = [];
     tracer = new LineTracer({
         "caret_canvas": caretCanvas,
         "canvas": lineCanvas,
@@ -172,6 +138,7 @@ function onDomComplete() {
     get("thicknessPerPUInput").onchange();
     get("isPerUnitMode").onclick();
     get("isArrowAnimation").onclick();
+    get("lineColorModeSelectInput").onchange();
     doPlotting();
     tracer.plot_arrows();
     linesArray = getLinesFromDDLObj(lines_ddl_g);
@@ -260,6 +227,12 @@ document.getElementById('thicknessPerMWInput').onchange = function () {
 document.getElementById('thicknessPerPUInput').onchange = function () {
     // access properties using this keyword
     tracer.set_thickness_per_unit(this.value);
+    doPlotting();
+};
+
+//Assign function to onclick property of checkbox for arrow size change
+document.getElementById('lineColorModeSelectInput').onchange = function () {
+    tracer.set_line_color_mode(this.options[this.selectedIndex].value);
     doPlotting();
 };
 
