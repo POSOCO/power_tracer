@@ -508,7 +508,7 @@ function LineTracer(opt_options) {
             //fetch a line
             var line = lines[i];
 
-            if (line.get_line_voltage() == null) {
+            if (line.get_line_voltage() == null || line.get_line_power() == null) {
                 continue;
             }
             if (line.get_line_voltage() == 765 && plot_765 == false) {

@@ -89,13 +89,20 @@ function getLinesFromDDLObj(ddlObj) {
             for (var lineMetaIter = 0; lineMetaIter < layerLine.meta.length; lineMetaIter++) {
                 lineNameMetas.push(layerLine.meta[lineMetaIter].value);
             }
+            var lineId = layerLine.ednaId;
+            var linePower = null;
+            if (line_voltage != null) {
+                if (lineId != null) {
+                    linePower = line_nominal_power * (0.5 + Math.random());
+                }
+            }
             linesArray.push(new PowerLine({
                 "ends": ends,
-                "power": ((line_voltage != null) ? (line_nominal_power * (0.5 + Math.random())) : null),
+                "power": linePower,
                 "nominal": line_nominal_power,
                 "levels": line_alert_levels,
                 "voltage": line_voltage,
-                "address": "",
+                "address": lineId,
                 "name": lineNameMetas.join(".")
             }));
         }
