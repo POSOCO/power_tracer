@@ -5,10 +5,17 @@ function fetchAndSetScadaValue(scadaSourceObj, callback) {
         return callback(null, {dval: null, ednaId: null});
     }
     // check if  scadaSourceObj.ednaId is present
-    if (scadaSourceObj.get_line_address()) {
+    if (!scadaSourceObj.get_line_address()) {
         // scadaSourceObj.set_line_power(null);
         return callback(null, {dval: null, ednaId: null});
     }
+    if ((scadaSourceObj.get_line_voltage() == 765 && tracer.get_plot_765() == false)
+        || (scadaSourceObj.get_line_voltage() == 400 && tracer.get_plot_400() == false)
+        || (scadaSourceObj.get_line_voltage() == 220 && tracer.get_plot_220() == false)) {
+        // dont fetch if layer is masked
+        return callback(null, {dval: null, ednaId: null});
+    }
+    //console.log(scadaSourceObj.get_line_voltage());
     //console.log(scadaSourceObj.get_line_address());
     $.ajax({
         url: apiServerBaseAddress_g + "/api/values/real?pnt=" + scadaSourceObj.get_line_address(),
