@@ -16,8 +16,8 @@ function LineTracer(opt_options) {
     var plot_400 = false;
     var plot_220 = false;
     var plot_border = false;
-    var plot_address_less_lines = true;
-    var plot_null_power_lines = true;
+    var plot_address_less_lines = false;
+    var plot_null_power_lines = false;
     var line_color_mode = "severity";
     var xOffset_ = 0;
     var yOffset_ = 0;
