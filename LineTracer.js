@@ -16,6 +16,8 @@ function LineTracer(opt_options) {
     var plot_400 = false;
     var plot_220 = false;
     var plot_border = false;
+    var plot_address_less_lines = true;
+    var plot_null_power_lines = true;
     var line_color_mode = "severity";
     var xOffset_ = 0;
     var yOffset_ = 0;
@@ -89,6 +91,12 @@ function LineTracer(opt_options) {
             if (options.plot_only.indexOf("border") != -1) {
                 set_plot_border(true);
             }
+            if (options.plot_only.indexOf("address_less") != -1) {
+                set_plot_address_less_lines(true);
+            }
+            if (options.plot_only.indexOf("null_power") != -1) {
+                set_plot_null_power_lines(true);
+            }
         }
     }
 
@@ -105,6 +113,8 @@ function LineTracer(opt_options) {
     this.set_plot_400 = set_plot_400;
     this.set_plot_220 = set_plot_220;
     this.set_plot_border = set_plot_border;
+    this.set_plot_address_less_lines = set_plot_address_less_lines;
+    this.set_plot_null_power_lines = set_plot_null_power_lines;
     this.set_arrow_delay = set_arrow_delay;
     this.set_caret_size = set_caret_size;
     this.set_caret_mode = set_caret_mode;
@@ -127,6 +137,8 @@ function LineTracer(opt_options) {
     this.get_plot_400 = get_plot_400;
     this.get_plot_220 = get_plot_220;
     this.get_plot_border = get_plot_border;
+    this.get_plot_address_less_lines = get_plot_address_less_lines;
+    this.get_plot_null_power_lines = get_plot_null_power_lines;
     this.get_arrow_delay = get_arrow_delay;
     this.get_caret_size = get_caret_size;
     this.get_caret_mode = get_caret_mode;
@@ -205,6 +217,14 @@ function LineTracer(opt_options) {
         plot_border = bool;
     }
 
+    function set_plot_address_less_lines(bool) {
+        plot_address_less_lines = bool;
+    }
+
+    function set_plot_null_power_lines(bool) {
+        plot_null_power_lines = bool;
+    }
+
     function set_arrow_delay(delay) {
         arrowFrameDelay = delay;
     }
@@ -234,7 +254,7 @@ function LineTracer(opt_options) {
     }
 
     function set_scale(scale) {
-        scale_ = scale_;
+        scale_ = scale;
     }
 
     /**Getters**/
@@ -247,7 +267,7 @@ function LineTracer(opt_options) {
         return plotting_canvas_g;
     }
 
-    function get_line_colors(colors) {
+    function get_line_colors() {
         return line_colors_g;
     }
 
@@ -281,6 +301,14 @@ function LineTracer(opt_options) {
 
     function get_plot_border() {
         return plot_border;
+    }
+
+    function get_plot_address_less_lines() {
+        return plot_address_less_lines;
+    }
+
+    function get_plot_null_power_lines() {
+        return plot_null_power_lines;
     }
 
     function get_arrow_delay() {
@@ -371,7 +399,7 @@ function LineTracer(opt_options) {
         for (var i = 0; i < lines.length; i++) {
             //fetch a line
             var line = lines[i];
-
+            /* Find if to plot layer Start */
             if (line.get_line_voltage() == 765 && plot_765 == false) {
                 continue;
             }
@@ -384,7 +412,15 @@ function LineTracer(opt_options) {
             if (line.get_line_voltage() == null && plot_border == false) {
                 continue;
             }
-
+            /* Find if to plot layer End */
+            /* Don't plot if no edna Id*/
+            if (line.get_line_voltage() != null && line.get_line_address() == null && plot_address_less_lines == false) {
+                continue;
+            }
+            /* Don't plot if no power */
+            if (line.get_line_voltage() != null && line.get_line_power() == null && plot_null_power_lines == false) {
+                continue;
+            }
             //determine the line thickness and line power direction
             //here we are accommodating the line plotter mode
             var thickness = line_thickness_function(line.get_line_power(), line.get_line_nominal_flow(), plot_mode_g);
@@ -508,9 +544,10 @@ function LineTracer(opt_options) {
             //fetch a line
             var line = lines[i];
 
-            if (line.get_line_voltage() == null || line.get_line_power() == null) {
+            if (line.get_line_voltage() == null || line.get_line_power() == null || line.get_line_power() == 0) {
                 continue;
             }
+            /* Layer Masking Check Start */
             if (line.get_line_voltage() == 765 && plot_765 == false) {
                 continue;
             }
@@ -520,8 +557,10 @@ function LineTracer(opt_options) {
             if (line.get_line_voltage() == 220 && plot_220 == false) {
                 continue;
             }
-            //do not draw carets if power == 0
-            if (line.get_line_power() == 0) {
+            /* Layer Masking Check End */
+
+            /* Don't plot if no edna Id*/
+            if (line.get_line_voltage() != null && line.get_line_address() == null && plot_address_less_lines == false) {
                 continue;
             }
 

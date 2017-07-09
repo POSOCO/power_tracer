@@ -1,7 +1,12 @@
 var apiServerBaseAddress_g = "http://localhost:62448";
 function fetchAndSetScadaValue(scadaSourceObj, callback) {
     // check if  scadaSourceObj.ednaId is present
-    if (!scadaSourceObj || !scadaSourceObj.get_line_address()) {
+    if (!scadaSourceObj) {
+        return callback(null, {dval: null, ednaId: null});
+    }
+    // check if  scadaSourceObj.ednaId is present
+    if (scadaSourceObj.get_line_address()) {
+        // scadaSourceObj.set_line_power(null);
         return callback(null, {dval: null, ednaId: null});
     }
     //console.log(scadaSourceObj.get_line_address());

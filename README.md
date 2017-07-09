@@ -76,7 +76,7 @@ and another function that uses this function to fetch all line values one by one
 
 8. Solve the callstack problem -- done by referring to https://stackoverflow.com/questions/34191788/how-to-process-a-big-array-applying-a-async-function-for-each-element-in-nodejs
 
-8. Create option to mask lines without eDNA point, mask lines with null power
+8. Create option to mask lines without eDNA point, mask lines with null power -- done
 
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)

@@ -137,6 +137,8 @@ function onDomComplete() {
     get("plot400Input").onclick();
     get("plot220Input").onclick();
     get("plotBorderInput").onclick();
+    get("plotAddressLessInput").onclick();
+    get("plotNullPowerInput").onclick();
     get("arrowSpeedInput").onchange();
     get("arrowSizeInput").onchange();
     get("caretModeSelectInput").onchange();
@@ -206,12 +208,24 @@ document.getElementById('plotBorderInput').onclick = function () {
 };
 
 //Assign function to onclick property of checkbox for arrow animation toggling
+document.getElementById('plotAddressLessInput').onclick = function () {
+    tracer.set_plot_address_less_lines(this.checked);
+    doPlotting();
+};
+
+//Assign function to onclick property of checkbox for arrow animation toggling
+document.getElementById('plotNullPowerInput').onclick = function () {
+    tracer.set_plot_null_power_lines(this.checked);
+    doPlotting();
+};
+
+//Assign function to onclick property of checkbox for arrow animation toggling
 document.getElementById('arrowSpeedInput').onchange = function () {
     // access properties using this keyword
     var newDelay = 1000 / this.value;
     if (newDelay != tracer.get_arrow_delay()) {
         tracer.set_arrow_delay(newDelay);
-        tracer.plot_arrows();
+        //tracer.plot_arrows();
     }
 };
 
@@ -220,7 +234,7 @@ document.getElementById('arrowSizeInput').onchange = function () {
     // access properties using this keyword
     var newSize = this.value;
     tracer.set_caret_size(newSize);
-    tracer.plot_arrows();
+    //tracer.plot_arrows();
 };
 
 //Assign function to onclick property of checkbox for arrow size change
