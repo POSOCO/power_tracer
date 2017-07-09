@@ -120,38 +120,57 @@ function onDomComplete() {
     var getVal = function (idStr) {
         return document.getElementById(idStr).value;
     };
+    var getSelectVal = function (idStr) {
+        return document.getElementById(idStr).options[document.getElementById(idStr).selectedIndex].value;
+    };
     var lineCanvas = document.getElementById("myCanvas");
     linesArray = [];
+    var plot_only = [];
+    if (get("plot765Input").checked) {
+        plot_only.push(765);
+    }
+    if (get("plot765Input").checked) {
+        plot_only.push(765);
+    }
+    if (get("plot400Input").checked) {
+        plot_only.push(400);
+    }
+    if (get("plot220Input").checked) {
+        plot_only.push(220);
+    }
+    if (get("plotBorderInput").checked) {
+        plot_only.push("border");
+    }
+    if (get("plotAddressLessInput").checked) {
+        plot_only.push("address_less");
+    }
+    if (get("plotNullPowerInput").checked) {
+        plot_only.push("null_power");
+    }
     tracer = new LineTracer({
         "caret_canvas": caretCanvas,
         "canvas": lineCanvas,
         "lines": linesArray,
         "colors": ["#6495ED", "#FF69B4", "#FF0000"],
-        "thickness_per_mw": 0.01,
-        "thickness_per_unit": 6,
+        "thickness_per_mw": getVal("thicknessPerMWInput"),
+        "thickness_per_unit": getVal("thicknessPerPUInput"),
         "thickness_threshold": 15,
-        "mode": 0,
-        "plot_only": [765, 400, "border"]
+        "line_color_mode": getSelectVal("lineColorModeSelectInput"),
+        "mode": get("isPerUnitMode").checked == true ? 1 : 0,
+        "plot_only": plot_only
     });
-    get("plot765Input").onclick();
-    get("plot400Input").onclick();
-    get("plot220Input").onclick();
-    get("plotBorderInput").onclick();
-    get("plotAddressLessInput").onclick();
-    get("plotNullPowerInput").onclick();
-    get("arrowSpeedInput").onchange();
-    get("arrowSizeInput").onchange();
-    get("caretModeSelectInput").onchange();
-    get("caretFillInput").onchange();
-    get("thicknessPerMWInput").onchange();
-    get("thicknessPerPUInput").onchange();
-    get("isPerUnitMode").onclick();
-    get("isArrowAnimation").onclick();
-    get("lineColorModeSelectInput").onchange();
+    tracer.set_arrow_delay(1000 / getVal("arrowSpeedInput"));
+    tracer.set_caret_size(getVal("arrowSizeInput"));
+    tracer.set_caret_mode(getSelectVal("caretModeSelectInput"));
+    tracer.set_caret_fill(getSelectVal("caretFillInput"));
     doPlotting();
     tracer.plot_arrows();
     linesArray = getLinesFromDDLObj(lines_ddl_g);
     tracer.set_lines(linesArray);
+    // saving memory Start
+    lines_ddl_g = null;
+    linesArray = [];
+    // saving memory End
     doPlotting();
 }
 
