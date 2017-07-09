@@ -249,6 +249,43 @@ function doPlotting() {
     angular.element(document.getElementById('lineSortController')).scope().updateLines(tracer.get_lines());
 }
 
+var isFetchingInProgress_g = false;
+var scadaFetchTimerId_g = null;
+var monitoringInterval_g = 5000;
+
+function startScadaFetching() {
+    stopScadaFetching();
+    updateLineFlows();
+    scadaFetchTimerId_g = setInterval(updateLineFlows, monitoringInterval_g);
+}
+
+function stopScadaFetching() {
+    clearInterval(scadaFetchTimerId_g);
+}
+
+
+function updateLineFlows() {
+    if (isFetchingInProgress_g) {
+        return;
+    }
+    isFetchingInProgress_g = true;
+    var processStartTime = new Date();
+    async.mapSeries(tracer.get_lines(), fetchAndSetScadaValue, function (err, results) {
+        isFetchingInProgress_g = false;
+        var processEndTime = new Date();
+        document.getElementById("lastUpdatedText").innerHTML = processEndTime.getDate() + "/" + (processEndTime.getMonth() + 1) + "/" + processEndTime.getFullYear() + " " + processEndTime.getHours() + ":" + processEndTime.getMinutes() + ":" + processEndTime.getSeconds();
+        document.getElementById("processTimeText").innerHTML = "" + (processEndTime.getTime() - processStartTime.getTime()) / 1000;
+        if (err) {
+            console.log(err);
+            //return done(err);
+            return;
+        }
+        //All the values are available in the results Array
+        //return done(null, null);
+    });
+
+}
+
 angular.module('lineSortApp', ['angularUtils.directives.dirPagination'])
 
     .controller('lineSortController', function ($scope) {

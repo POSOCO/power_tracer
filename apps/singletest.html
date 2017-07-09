@@ -12,13 +12,21 @@
 </head>
 <body>
 <div class="wrapper">
-    <h2>Line Testing</h2>
+    <h2>Power Flow Visualisation</h2>
 
     <div id="canvasWrapper" style="background-color: black">
         <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
         <canvas id="caretCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
     </div>
     <div id="controlPanel" style="margin-top: 50px;padding-left: 50px">
+        <p>
+            Last Updated at <span id='lastUpdatedText'>xx/xx/xxxx xx:xx:xx</span>________Processing Time - <span
+                id='processTimeText'>_</span> secs
+            <button style="margin-left: 20px" id="startScadaFetching" onclick="startScadaFetching()">Start Fetching
+            </button>
+            <button style="margin-left: 20px" id="stopScadaFetching" onclick="stopScadaFetching()">Stop Fetching
+            </button>
+        </p>
         <span style="margin-left:36px">Zoom: </span>
         <button onclick="addZoom(0.5)">-</button>
         <button onclick="addZoom(-0.5)">+</button>
@@ -138,10 +146,12 @@
         style="color:#dddddd;">https://github.com/posoco/power_tracer</a>
 </div>
 <script src="../libs/jquery-1.7.min.js"></script>
+<script src="../libs/async.min.js"></script>
 <script src="./libs/consoleFunctions.js"></script>
 <script src="../PowerLine.js"></script>
 <script src="../LineTracer.js"></script>
 <script src="../libs/requestAnimFrame.js"></script>
 <script src="./lines_ddl.js"></script>
+<script src="./data_fetcher.js"></script>
 <script src="./singleTest.js"></script>
 </body>

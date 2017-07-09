@@ -72,8 +72,11 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 6. Create option to change color scheme according to voltage levels, severity levels, homogeneous color -- done
 
 7. Create a function that updates line flow values from eDNA, 
-and anaother function that uses this function to fetch all line values one by one and repeat the line fetch for every 15 seconds
+and another function that uses this function to fetch all line values one by one and repeat the line fetch for every 15 seconds
 
+8. Solve the callstack problem
+
+8. Create option to mask lines without eDNA point, mask lines with null power
 
 ***
 Watch the demo of this project [here](https://posoco.github.io/power_tracer/apps/singletest)
