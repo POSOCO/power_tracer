@@ -72,9 +72,9 @@ The Line Tracer Object provides **_setter functions_** and **_getter functions_*
 6. Create option to change color scheme according to voltage levels, severity levels, homogeneous color -- done
 
 7. Create a function that updates line flow values from eDNA, 
-and another function that uses this function to fetch all line values one by one and repeat the line fetch for every 15 seconds
+and another function that uses this function to fetch all line values one by one and repeat the line fetch for every 15 seconds -- done
 
-8. Solve the callstack problem
+8. Solve the callstack problem -- done by referring to https://stackoverflow.com/questions/34191788/how-to-process-a-big-array-applying-a-async-function-for-each-element-in-nodejs
 
 8. Create option to mask lines without eDNA point, mask lines with null power
 

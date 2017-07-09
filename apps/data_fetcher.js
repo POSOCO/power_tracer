@@ -1,21 +1,22 @@
 var apiServerBaseAddress_g = "http://localhost:62448";
 function fetchAndSetScadaValue(scadaSourceObj, callback) {
     // check if  scadaSourceObj.ednaId is present
-    if (!scadaSourceObj.ednaId) {
+    if (!scadaSourceObj || !scadaSourceObj.get_line_address()) {
         return callback(null, {dval: null, ednaId: null});
     }
+    //console.log(scadaSourceObj.get_line_address());
     $.ajax({
-        url: apiServerBaseAddress_g + "/api/values/real?pnt=" + scadaSourceObj.ednaId,
+        url: apiServerBaseAddress_g + "/api/values/real?pnt=" + scadaSourceObj.get_line_address(),
         type: 'GET',
         success: function (result) {
             if (!result) {
                 //console.log("Null result obtained for ", scadaSourceObj);
-                result = {dval: null, ednaId: scadaSourceObj.ednaId};
+                result = {dval: null, ednaId: scadaSourceObj.get_line_address()};
                 return callback(null, result);
             }
             //console.log(result);
             //toastr["info"]("Data received from server");
-            result.ednaId = scadaSourceObj.ednaId;
+            result.ednaId = scadaSourceObj.get_line_address();
             var val = result.dval;
             // Convert Numeric value to string if present
             if (typeof val != 'undefined' && val != null && !isNaN(val)) {
@@ -25,12 +26,17 @@ function fetchAndSetScadaValue(scadaSourceObj, callback) {
             } else {
                 result.dval = null;
             }
-            callback(null, result);
+            return callback(null, result);
         },
         error: function (textStatus, errorThrown) {
-            console.log(textStatus);
+            //console.log(textStatus);
             //console.log(errorThrown);
-            callback(null, {dval: null, ednaId: scadaSourceObj.ednaId, error: textStatus});
+            return callback(null, {
+                dval: null,
+                ednaId: scadaSourceObj.get_line_address(),
+                error: textStatus.statusText
+            });
         }
     });
+    return;
 }
