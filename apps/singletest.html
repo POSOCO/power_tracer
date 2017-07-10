@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>PowerLine Display Test</title>
+    <title>PowerFlow Visualization</title>
     <link rel="shortcut icon" type="image/ico"
           href="https://raw.githubusercontent.com/posoco/power_tracer/gh-pages/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="./home.css">
@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <h2>Power Flow Visualisation</h2>
+    <span>Power Flow Visualisation</span>
 
     <div id="canvasWrapper" style="background-color: black">
         <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
@@ -65,7 +65,7 @@
         </select>
         <br><br>
 
-        <label><input type="checkbox" checked name="isArrowAnimation" id="isArrowAnimation" style="margin-left: 20px">Arrows</label>
+        <label><input type="checkbox" name="isArrowAnimation" id="isArrowAnimation" style="margin-left: 20px" checked>Arrows</label>
         <label style="margin-left: 20px">Arrow Shape</label>
         <select id="caretModeSelectInput" onchange="changeCaretMode(this)">
             <option value="arrow" selected>Arrows</option>

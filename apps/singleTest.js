@@ -56,12 +56,12 @@ function getLinesFromDDLObj(ddlObj) {
         var line_nominal_power = null;
         if (layers765.indexOf(layer.name) != -1) {
             line_voltage = 765;
-            line_alert_levels = [0, 1200, 2000];
-            line_nominal_power = 1200;
+            line_alert_levels = [0, 1000, 1800];
+            line_nominal_power = 1100;
         } else if (layers400.indexOf(layer.name) != -1) {
             line_voltage = 400;
-            line_alert_levels = [0, 600, 800];
-            line_nominal_power = 600;
+            line_alert_levels = [0, 400, 800];
+            line_nominal_power = 500;
         } else if (layers220.indexOf(layer.name) != -1) {
             line_voltage = 220;
             line_alert_levels = [0, 200, 400];
@@ -94,6 +94,7 @@ function getLinesFromDDLObj(ddlObj) {
             if (line_voltage != null) {
                 if (lineId != null) {
                     linePower = line_nominal_power * (0.5 + Math.random());
+                    // linePower = null;
                 }
             }
             linesArray.push(new PowerLine({
@@ -172,6 +173,8 @@ function onDomComplete() {
     linesArray = [];
     // saving memory End
     doPlotting();
+    get('isArrowAnimation').onclick();
+    startScadaFetching();
 }
 
 function showValue(newVal) {
@@ -284,7 +287,7 @@ function doPlotting() {
 
 var isFetchingInProgress_g = false;
 var scadaFetchTimerId_g = null;
-var monitoringInterval_g = 5000;
+var monitoringInterval_g = 25000;
 
 function startScadaFetching() {
     stopScadaFetching();

@@ -1,4 +1,4 @@
-var apiServerBaseAddress_g = "http://localhost:62448";
+var apiServerBaseAddress_g = "http://wmrm0mc1:62448";
 function fetchAndSetScadaValue(scadaSourceObj, callback) {
     // check if  scadaSourceObj.ednaId is present
     if (!scadaSourceObj) {
