@@ -1,6 +1,11 @@
 # power_tracer
 Plots the line width according to the line power flow
 
+![Snapshot 1](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img04.png)
+![Snapshot 2](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img05.png)
+![Snapshot 3](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img07.png)
+![Snapshot 4](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img08.png)
+
 ##WorkFlow
 The work flow of this app is as follows
 
