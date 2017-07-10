@@ -6,7 +6,7 @@ Plots the line width according to the line power flow
 ![Snapshot 3](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img07.png)
 ![Snapshot 4](https://github.com/POSOCO/power_tracer/raw/gh-pages/apps/img/img08.png)
 
-##WorkFlow
+## WorkFlow
 The work flow of this app is as follows
 
 1. We create required number of **_line objects_** with desired line properties like line end points, line power flow, line nominal flow value, line emergency levels, line voltage level, line conductor type, line color, line thickness, line power eDNA address
